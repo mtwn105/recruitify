@@ -4,6 +4,7 @@ const schema = a.schema({
   User: a
     .model({
       id: a.id(),
+      username: a.string(),
       name: a.string().required(),
       type: a.enum(['COMPANY', 'INDIVIDUAL']),
       email: a.email().required(),
@@ -22,7 +23,21 @@ const schema = a.schema({
       city: a.string(),
       country: a.string(),
       expectedSalary: a.float(),
-      resume: a.string()
+      resume: a.string(),
+      website: a.string(),
+      linkedin: a.string(),
+      github: a.string(),
+    })
+    .authorization((allow) => [allow.publicApiKey()]),
+  CompnayProfile: a
+    .model({
+      id: a.id(),
+      name: a.string(),
+      description: a.string(),
+      logo: a.string(),
+      industry: a.string(),
+      website: a.string(),
+      userId: a.string(),
     })
     .authorization((allow) => [allow.publicApiKey()]),
 });

@@ -1,3 +1,4 @@
+@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,13 +14,13 @@ body {
   align-items: center; */
 }
 
-main {
+/* main {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-}
+} */
 
-button {
+/* button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
@@ -66,7 +67,7 @@ li:hover {
 a {
   font-weight: 800;
   text-decoration: none;
-}
+} */
 html,
 body {
   height: 100%;
@@ -74,4 +75,8 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.w-100 {
+  width: 100%;
 }

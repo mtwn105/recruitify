@@ -1,5 +1,5 @@
 .logo {
-  height: 200px;
+  height: 100px;
 }
 
 [data-amplify-authenticator] {
@@ -19,4 +19,12 @@
   --amplify-components-tabs-item-color: var(--amplify-colors-neutral-80);
   --amplify-components-tabs-item-active-color: var(--amplify-colors-purple-100);
   --amplify-components-button-link-color: var(--amplify-colors-purple-80);
+}
+.spacer {
+  flex: 1 1 auto;
+}
+
+.signout-button {
+  height: 40px;
+  font-size: 1rem;
 }
