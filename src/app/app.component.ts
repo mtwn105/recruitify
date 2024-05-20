@@ -14,5 +14,5 @@ Amplify.configure(outputs);
   imports: [RouterOutlet, TodosComponent],
 })
 export class AppComponent {
-  title = 'amplify-angular-template';
+  title = 'recruitify';
 }
