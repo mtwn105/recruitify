@@ -7,7 +7,7 @@ const schema = a.schema({
       name: a.string().required(),
       type: a.enum(['COMPANY', 'INDIVIDUAL']),
       email: a.email().required(),
-      phone: a.phone(),
+      phone: a.string(),
     })
     .authorization((allow) => [allow.publicApiKey()]),
   UserProfile: a

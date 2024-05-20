@@ -1,0 +1,31 @@
+<!-- Only render this if there's an authenticated user -->
+<ng-container *ngIf="authenticator.route === 'authenticated'">
+  <div class="mx-auto text-center my-4">
+    Welcome {{authenticator.user}}
+  </div>
+</ng-container>
+
+<!-- Render sign-in screen otherwise with authenticator -->
+<ng-container *ngIf="authenticator.route !== 'authenticated'">
+
+  <div class="mx-auto text-center my-4">
+
+    <h1 style="padding: var(--amplify-space-large); text-align: center; font-weight: var(--amplify-font-weights-bold);"
+      class="amplify-heading--2 ">
+      Start your Job Search here!
+    </h1>
+    <h2 style="padding: var(--amplify-space-large); text-align: center" class="amplify-text">
+      Get Started by creating an account.
+    </h2>
+
+    <amplify-authenticator [signUpAttributes]="[
+      'name',
+      'email'
+    ]">
+      <ng-template amplifySlot="authenticated" let-user="user" let-signOut="signOut">
+        <h1>Welcome {{ user.username }}!</h1>
+        <button (click)="signOut()">Sign Out</button>
+      </ng-template>
+    </amplify-authenticator>
+  </div>
+</ng-container>
