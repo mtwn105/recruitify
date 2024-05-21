@@ -26,7 +26,7 @@
   </div>
 </ng-container>
 <ng-container *ngIf="currentStep==2 && isRecruiter">
-  <h2 style="padding: var(--amplify-space-large); text-align: center" class="amplify-text">
+  <h2 style=" text-align: center" class="amplify-text">
     Now fill in the below details
   </h2>
   <div class="mx-auto text-center my-4">
@@ -35,6 +35,16 @@
       <mat-card-content>
 
         <form [formGroup]="recruiterProfileForm" (ngSubmit)="createRecruiter()">
+
+          <div class="text-center mx-auto" *ngIf="previewUrl">
+            <img class="m-2 mx-auto" [src]="previewUrl" alt="Image Preview" style="max-width: 100%; height: 200px;">
+          </div>
+          <div class="m-2">
+            <mat-label>Upload Company Logo</mat-label>
+            <input type="file" (change)="onFileSelected($event)" hidden id="fileInput">
+            <p class="text-sm my-2">{{selectedFile?.name || ''}}</p>
+            <button color="accent" mat-raised-button type="button" (click)="onChooseAFile()">Browse</button>
+          </div>
           <mat-form-field class="card-inputs" appearance="fill">
             <mat-label>Company Name</mat-label>
             <input matInput formControlName="name" placeholder="Enter Company Name">

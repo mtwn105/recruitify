@@ -28,6 +28,8 @@ export class AuthComponent {
     this.authenticator.subscribe((data) => {
       console.log(data);
       if (data.authStatus === 'authenticated') {
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('user', JSON.stringify(data.user));
         this.router.navigate(['create-profile']);
       }
     });
@@ -55,6 +57,11 @@ export class AuthComponent {
     //   console.log(session);
 
     // })
+  }
+
+  signOutAndGoHome(signOut: any) {
+    signOut();
+    this.router.navigate(['/']);
   }
 
 }

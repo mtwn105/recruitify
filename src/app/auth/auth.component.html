@@ -12,23 +12,23 @@
 <mat-toolbar *ngIf="authenticator.route !== 'authenticated'">
   <img class="logo" alt="Amplify logo" src="../../assets/Logo_Rectangle2.png" />
 </mat-toolbar>
+<div *ngIf="authenticator.route !== 'authenticated'" class="mx-auto text-center my-4">
 
+  <h1 style="padding: var(--amplify-space-large); text-align: center; font-weight: var(--amplify-font-weights-bold);"
+    class="amplify-heading--2 ">
+    Start your Job Search here!
+  </h1>
+  <h2 style="padding: var(--amplify-space-large); text-align: center" class="amplify-text">
+    Get Started by creating an account.
+  </h2>
+</div>
 <amplify-authenticator>
-  <div *ngIf="authenticator.authStatus !== 'authenticated'" class="mx-auto text-center my-4">
 
-    <h1 style="padding: var(--amplify-space-large); text-align: center; font-weight: var(--amplify-font-weights-bold);"
-      class="amplify-heading--2 ">
-      Start your Job Search here!
-    </h1>
-    <h2 style="padding: var(--amplify-space-large); text-align: center" class="amplify-text">
-      Get Started by creating an account.
-    </h2>
-  </div>
   <ng-template amplifySlot="authenticated" let-user="user" let-signOut="signOut">
     <mat-toolbar>
       <img class="logo" alt="Amplify logo" src="../../assets/Logo_Rectangle2.png" />
       <span class="spacer"></span>
-      <button (click)="signOut()" color="accent" mat-raised-button class="signout-button"
+      <button (click)="signOutAndGoHome(signOut)" color="accent" mat-raised-button class="signout-button"
         aria-label="Example icon-button with menu icon">
         Sign out
       </button>

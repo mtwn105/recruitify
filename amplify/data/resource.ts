@@ -27,6 +27,7 @@ const schema = a.schema({
       website: a.string(),
       linkedin: a.string(),
       github: a.string(),
+      userId: a.string(),
     })
     .authorization((allow) => [allow.publicApiKey()]),
   CompnayProfile: a
