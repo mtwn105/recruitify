@@ -41,7 +41,7 @@
           </div>
           <div class="m-2">
             <mat-label>Upload Company Logo</mat-label>
-            <input type="file" (change)="onFileSelected($event)" hidden id="fileInput">
+            <input accept="image/*" type="file" (change)="onFileSelected($event)" hidden id="fileInput">
             <p class="text-sm my-2">{{selectedFile?.name || ''}}</p>
             <button color="accent" mat-raised-button type="button" (click)="onChooseAFile()">Browse</button>
           </div>
@@ -131,7 +131,7 @@
           </mat-form-field>
           <div class="m-2">
             <mat-label>Upload Your Resume</mat-label>
-            <input type="file" (change)="onFileSelected($event)" hidden id="fileInput">
+            <input accept=".pdf, .doc, .docx" type="file" (change)="onFileSelected($event)" hidden id="fileInput">
             <p class="text-sm my-2">{{selectedFile?.name || ''}}</p>
             <button color="accent" mat-raised-button type="button" (click)="onChooseAFile()">Browse</button>
           </div>
