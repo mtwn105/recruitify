@@ -43,6 +43,30 @@ const schema = a.schema({
       userId: a.string(),
     })
     .authorization((allow) => [allow.publicApiKey()]),
+  Job: a
+    .model({
+      id: a.id(),
+      companyId: a.string(),
+      title: a.string(),
+      skills: a.string(),
+      domain: a.string(),
+      minExperience: a.float(),
+      salary: a.float(),
+      city: a.string(),
+      country: a.string(),
+      isRemote: a.boolean().default(false),
+      description: a.string(),
+    })
+    .authorization((allow) => [allow.publicApiKey()]),
+  JobApplications: a
+    .model({
+      id: a.id(),
+      jobId: a.string(),
+      userId: a.string(),
+      companyId: a.string(),
+      status: a.string(),
+    })
+    .authorization((allow) => [allow.publicApiKey()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

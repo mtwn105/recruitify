@@ -9,6 +9,7 @@ import { Amplify } from 'aws-amplify';
 import config from '../../../amplify_outputs.json'
 import { confirmSignIn, fetchAuthSession } from 'aws-amplify/auth';
 import { Hub } from '@aws-amplify/core';
+import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-auth',
   standalone: true,
@@ -19,17 +20,16 @@ import { Hub } from '@aws-amplify/core';
 export class AuthComponent {
 
 
-  constructor(public authenticator: AuthenticatorService, private router: Router) {
+  constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService) {
     Amplify.configure(config);
   }
 
   ngOnInit() {
 
     this.authenticator.subscribe((data) => {
-      console.log(data);
-      if (data.authStatus === 'authenticated') {
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('user', JSON.stringify(data.user));
+      // console.log(data);
+      if (data.authStatus === 'authenticated' && !this.authService.isLoggedIn) {
+        this.authService.setUser(data.user);
         this.router.navigate(['create-profile']);
       }
     });
@@ -61,6 +61,7 @@ export class AuthComponent {
 
   signOutAndGoHome(signOut: any) {
     signOut();
+    this.authService.signOut();
     this.router.navigate(['/']);
   }
 

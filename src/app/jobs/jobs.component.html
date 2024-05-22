@@ -1,1 +1,11 @@
-<p>jobs works!</p>
+<div class="p-4">
+  <div class="flex justify-end">
+    <button *ngIf="loggedInUser?.type == 'COMPANY'" (click)="createJob()" class="w-64 h-64 mx-4 p-4" mat-raised-button
+      color="primary">
+      Create a Job Posting
+      <span class="material-icons mx-2" style="font-size: 1.5rem;">
+        add
+      </span>
+    </button>
+  </div>
+</div>

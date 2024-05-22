@@ -1,3 +1,4 @@
+import { auth } from './../../../amplify/auth/resource';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -13,6 +14,7 @@ import { generateClient } from 'aws-amplify/data';
 import { uploadData } from "aws-amplify/storage";
 import type { Schema } from '../../../amplify/data/resource';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../services/auth.service';
 const client = generateClient<Schema>();
 
 
@@ -32,7 +34,6 @@ export class ProfileCreationComponent {
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
 
-  loggedInUser: any;
   userDetails: any;
   userProfile: any;
 
@@ -45,7 +46,7 @@ export class ProfileCreationComponent {
   recruiterProfileForm: FormGroup;
   jobSeekerProfileForm: FormGroup;
 
-  constructor(public authenticator: AuthenticatorService, private router: Router, private formBuilder: FormBuilder) {
+  constructor(public authenticator: AuthenticatorService, private router: Router, private formBuilder: FormBuilder, private authService: AuthService) {
     this.recruiterProfileForm = this.formBuilder.group({
       image: this.formBuilder.control(''),
       name: this.formBuilder.control('', [Validators.required]),
@@ -73,84 +74,74 @@ export class ProfileCreationComponent {
   }
 
   ngOnInit() {
-
-    this.authenticator.subscribe((data) => {
-      console.log(data);
-      if (data.authStatus === 'authenticated') {
-        this.loggedInUser = data.user;
-        console.log(this.loggedInUser);
-        this.getUser();
-      }
-    });
-
+    this.getUser();
   }
 
 
   getUser() {
 
-    if (this.loggedInUser) {
-      client.models.User.list({
-        filter: {
-          username: {
-            eq: this.loggedInUser.username
-          }
+    client.models.User.list({
+      filter: {
+        username: {
+          eq: this.authService.user.username
         }
-      }).then(user => {
-        // this.userDetails = user;
-        console.log(user);
-        if (!user || !user.data || !user.data.length) {
-          // this.router.navigate(['create-profile']);
-          // Create user
-          this.newUser = true;
-        } else {
-          this.userDetails = user.data[0];
-          this.newUser = false;
-          // this.currentStep = 2;
-          // fetch user profile
-          if (this.userDetails.type == 'COMPANY') {
-            this.isRecruiter = true;
-            client.models.CompnayProfile.list({
-              filter: {
-                userId: {
-                  eq: this.userDetails.id
-                }
+      },
+      limit: 1
+    }).then(user => {
+      console.log(user);
+      if (!user || !user.data || !user.data.length) {
+        // Create user
+        this.newUser = true;
+      } else {
+        this.userDetails = user.data[0];
+        this.newUser = false;
+        // fetch user profile
+        if (this.userDetails.type == 'COMPANY') {
+          this.isRecruiter = true;
+          client.models.CompnayProfile.list({
+            filter: {
+              userId: {
+                eq: this.userDetails.id
               }
-            }).then(userProfile => {
-              console.log(userProfile);
+            },
+            limit: 1
+          }).then(userProfile => {
+            console.log(userProfile);
 
-              if (!userProfile || !userProfile.data || !userProfile.data.length) {
-                this.currentStep = 2;
-              } else {
-                this.currentStep = 3;
-                // navigate to next step
-                this.router.navigate(['/jobs']);
+            if (!userProfile || !userProfile.data || !userProfile.data.length) {
+              this.currentStep = 2;
+            } else {
+              this.currentStep = 3;
+              // navigate to next step
+              this.router.navigate(['/jobs']);
+            }
+          });
+        } else {
+          client.models.UserProfile.list({
+            filter: {
+              userId: {
+                eq: this.userDetails.id
               }
-            });
-          } else {
-            client.models.UserProfile.list({
-              filter: {
-                userId: {
-                  eq: this.userDetails.id
-                }
-              }
-            }).then(userProfile => {
-              console.log(userProfile);
-              // this.userProfile = userProfile.data[0];
-              // console.log(this.userProfile);
-              if (!userProfile || !userProfile.data || !userProfile.data.length) {
-                this.currentStep = 2;
-              } else {
-                // this.currentStep = 3;
-                // navigate to next step
-                // this.router.navigate(['/jobs']);
-              }
-            });
-          }
+            },
+            limit: 1
+          }).then(userProfile => {
+            console.log(userProfile);
+            // this.userProfile = userProfile.data[0];
+            // console.log(this.userProfile);
+            if (!userProfile || !userProfile.data || !userProfile.data.length) {
+              this.currentStep = 2;
+            } else {
+              this.currentStep = 3;
+              // navigate to next step
+              this.router.navigate(['/jobs']);
+            }
+          });
         }
-        // this.userProfile = user.profile;
-        // console.log(this.userProfile);
-      });
-    }
+      }
+      // this.userProfile = user.profile;
+      // console.log(this.userProfile);
+    });
+
 
   }
 
@@ -166,15 +157,13 @@ export class ProfileCreationComponent {
     client.models.User.create({
       name: this.recruiterProfileForm.value.name,
       type: 'COMPANY',
-      username: this.loggedInUser.username,
-      email: this.loggedInUser.signInDetails.loginId,
+      username: this.authService.user.username,
+      email: this.authService.user.signInDetails.loginId,
     }).then(async user => {
       console.log(user);
-      // this.router.navigate(['create-profile']);
 
       this.userDetails = user;
-
-      // try {
+      this.authService.setUserProfile(user);
 
       let logoPath = null;
 
@@ -197,7 +186,7 @@ export class ProfileCreationComponent {
       }).then(profile => {
         console.log(profile);
         this.userProfile = profile;
-        // this.router.navigate(['create-profile']);
+        this.router.navigate(['/jobs']);
       });
 
     })
@@ -235,16 +224,12 @@ export class ProfileCreationComponent {
     client.models.User.create({
       name: this.jobSeekerProfileForm.value.name,
       type: 'INDIVIDUAL',
-      username: this.loggedInUser.username,
-      email: this.loggedInUser.signInDetails.loginId,
+      username: this.authService.user.username,
+      email: this.authService.user.signInDetails.loginId,
     }).then(async user => {
       console.log(user);
-      // this.router.navigate(['create-profile']);
-
       this.userDetails = user;
-
-      // try {
-
+      this.authService.setUserProfile(user);
       let resumePath = null;
 
       if (!!this.previewUrl) {
@@ -276,7 +261,7 @@ export class ProfileCreationComponent {
       }).then(profile => {
         console.log(profile);
         this.userProfile = profile;
-        // this.router.navigate(['create-profile']);
+        this.router.navigate(['/jobs']);
       });
 
     })
@@ -287,9 +272,7 @@ export class ProfileCreationComponent {
     return value + 'yrs';
   }
   formatSalary(value: number): string {
-    // seperate value with commas
     return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    // return '$' + value;
   }
 
   addSkill(event: MatChipInputEvent): void {

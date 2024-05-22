@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthComponent } from './auth/auth.component';
 import { ProfileCreationComponent } from './profile-creation/profile-creation.component';
 import { JobsComponent } from './jobs/jobs.component';
+import { CreateJobComponent } from './create-job/create-job.component';
 
 export const routes: Routes = [
   // {
@@ -20,5 +21,9 @@ export const routes: Routes = [
   {
     path: 'jobs',
     component: JobsComponent
+  },
+  {
+    path: 'create-job',
+    component: CreateJobComponent
   }
 ];

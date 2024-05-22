@@ -1,0 +1,70 @@
+<div class="mx-auto text-center my-4">
+
+  <h1 style="padding: var(--amplify-space-large); text-align: center; font-weight: var(--amplify-font-weights-bold);"
+    class="amplify-heading--2 ">
+    Create a Job Posting
+  </h1>
+</div>
+
+<div class="mx-auto text-center my-4">
+
+  <mat-card class="my-4 mx-auto card-profile">
+    <mat-card-content>
+
+      <form [formGroup]="createJobForm">
+
+        <mat-form-field class="card-inputs" appearance="fill">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" placeholder="Enter Job Title">
+        </mat-form-field>
+        <mat-form-field class="card-inputs" appearance="fill">
+          <mat-label>Domain</mat-label>
+          <input matInput formControlName="domain" placeholder="Enter Domain">
+        </mat-form-field>
+        <mat-form-field class="card-inputs" appearance="fill">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" placeholder="Enter Job Description">
+            </textarea>
+
+        </mat-form-field>
+        <mat-label>Min Experience: {{createJobForm.value.minExperience}} yrs</mat-label>
+        <mat-slider [displayWith]="formatExperience" class="card-inputs" discrete min="0" max="15" step="0.5">
+          <input formControlName="minExperience" matSliderThumb value="0">
+        </mat-slider>
+        <mat-label>Salary: {{formatSalary(createJobForm.value.salary)}}</mat-label>
+        <mat-slider [displayWith]="formatSalary" class="card-inputs" discrete min="10000" max="1000000" step="10000">
+          <input formControlName="salary" matSliderThumb value="10000">
+        </mat-slider>
+        <mat-form-field class="card-inputs">
+          <mat-label>Skills</mat-label>
+          <mat-chip-grid #chipGrid>
+            @for (skill of skills; track skill) {
+            <mat-chip-row color="primary" (removed)="removeSkill(skill)">
+              {{skill}}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+            }
+            <input placeholder="Add New Skill..." [matChipInputFor]="chipGrid"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+              (matChipInputTokenEnd)="addSkill($event)" />
+          </mat-chip-grid>
+        </mat-form-field>
+        <mat-slide-toggle class="mb-4" formControlName="isRemote">Remote Position</mat-slide-toggle>
+        <mat-form-field class="card-inputs" appearance="fill">
+          <mat-label>City</mat-label>
+          <input matInput formControlName="city" placeholder="Enter Job City">
+        </mat-form-field>
+        <mat-form-field class="card-inputs" appearance="fill">
+          <mat-label>Country</mat-label>
+          <input matInput formControlName="country" placeholder="Enter Job Country">
+        </mat-form-field>
+        <button [disabled]="!createJobForm.valid" (click)="createJob()" class="w-64 h-64 mx-4 p-4" mat-raised-button
+          color="primary">
+          Submit
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
