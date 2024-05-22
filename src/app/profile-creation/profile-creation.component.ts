@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { MatSliderModule } from '@angular/material/slider';
 import { generateClient } from 'aws-amplify/data';
 import { uploadData, getUrl } from "aws-amplify/storage";
 
@@ -17,7 +18,7 @@ const client = generateClient<Schema>();
 @Component({
   selector: 'app-profile-creation',
   standalone: true,
-  imports: [AmplifyAuthenticatorModule, CommonModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatCardModule],
+  imports: [AmplifyAuthenticatorModule, CommonModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatCardModule, MatSliderModule],
   templateUrl: './profile-creation.component.html',
   styleUrl: './profile-creation.component.css'
 })
@@ -37,6 +38,7 @@ export class ProfileCreationComponent {
   logoUrl = '';
 
   recruiterProfileForm: FormGroup;
+  jobSeekerProfileForm: FormGroup;
 
   constructor(public authenticator: AuthenticatorService, private router: Router, private formBuilder: FormBuilder) {
     this.recruiterProfileForm = this.formBuilder.group({
@@ -45,6 +47,23 @@ export class ProfileCreationComponent {
       description: this.formBuilder.control('', [Validators.required]),
       industry: this.formBuilder.control('', [Validators.required]),
       website: this.formBuilder.control('', [Validators.required, Validators.pattern('^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$')])
+    })
+    this.jobSeekerProfileForm = this.formBuilder.group({
+      name: this.formBuilder.control('', [Validators.required]),
+      phone: this.formBuilder.control(''),
+      experience: this.formBuilder.control(0, [Validators.required]),
+      education: this.formBuilder.control(''),
+      currentOrg: this.formBuilder.control(''),
+      currentRole: this.formBuilder.control(''),
+      domain: this.formBuilder.control(''),
+      skills: this.formBuilder.control(''),
+      city: this.formBuilder.control(''),
+      country: this.formBuilder.control(''),
+      expectedSalary: this.formBuilder.control(0),
+      resume: this.formBuilder.control(''),
+      website: this.formBuilder.control(''),
+      linkedin: this.formBuilder.control(''),
+      github: this.formBuilder.control(''),
     })
   }
 
@@ -116,9 +135,9 @@ export class ProfileCreationComponent {
               if (!userProfile || !userProfile.data || !userProfile.data.length) {
                 this.currentStep = 2;
               } else {
-                this.currentStep = 3;
+                // this.currentStep = 3;
                 // navigate to next step
-                this.router.navigate(['/jobs']);
+                // this.router.navigate(['/jobs']);
               }
             });
           }
@@ -144,7 +163,7 @@ export class ProfileCreationComponent {
       type: 'COMPANY',
       username: this.loggedInUser.username,
       email: this.loggedInUser.signInDetails.loginId,
-    }).then(user => {
+    }).then(async user => {
       console.log(user);
       // this.router.navigate(['create-profile']);
 
@@ -155,13 +174,12 @@ export class ProfileCreationComponent {
       let logoPath = null;
 
       if (!!this.previewUrl) {
-        uploadData({
+        const result = await uploadData({
           data: this.previewUrl,
           path: `companyLogos/${user.data?.id}`,
-        }).result.then(result => {
-          console.log(result);
-          logoPath = `companyLogos/${user.data?.id}`
-        });
+        }).result;
+        console.log(result);
+        logoPath = `companyLogos/${user.data?.id}`
       }
 
       client.models.CompnayProfile.create({
@@ -199,6 +217,74 @@ export class ProfileCreationComponent {
     if (el) {
       el.click();
     }
+  }
+
+  createJobSeeker() {
+    console.log(this.jobSeekerProfileForm.value);
+
+    if (!this.jobSeekerProfileForm.valid) {
+      console.log('form invalid');
+      return;
+    }
+
+    client.models.User.create({
+      name: this.jobSeekerProfileForm.value.name,
+      type: 'INDIVIDUAL',
+      username: this.loggedInUser.username,
+      email: this.loggedInUser.signInDetails.loginId,
+    }).then(async user => {
+      console.log(user);
+      // this.router.navigate(['create-profile']);
+
+      this.userDetails = user;
+
+      // try {
+
+      let resumePath = null;
+
+      if (!!this.previewUrl) {
+        const result = await uploadData({
+          data: this.previewUrl,
+          path: `resumes/${user.data?.id}`,
+        }).result;
+        console.log(result);
+        resumePath = `resumes/${user.data?.id}`
+      }
+
+      client.models.UserProfile.create({
+        name: this.jobSeekerProfileForm.value.name,
+        experience: this.jobSeekerProfileForm.value.experience,
+        education: this.jobSeekerProfileForm.value.education,
+        currentOrg: this.jobSeekerProfileForm.value.currentOrg,
+        currentRole: this.jobSeekerProfileForm.value.currentRole,
+        domain: this.jobSeekerProfileForm.value.domain,
+        skills: this.jobSeekerProfileForm.value.skills,
+        city: this.jobSeekerProfileForm.value.city,
+        country: this.jobSeekerProfileForm.value.country,
+        expectedSalary: this.jobSeekerProfileForm.value.expectedSalary,
+        resume: resumePath,
+        resumeFileName: this.selectedFile?.name,
+        website: this.jobSeekerProfileForm.value.website,
+        linkedin: this.jobSeekerProfileForm.value.linkedin,
+        github: this.jobSeekerProfileForm.value.github,
+        userId: user.data?.id,
+      }).then(profile => {
+        console.log(profile);
+        this.userProfile = profile;
+        // this.router.navigate(['create-profile']);
+      });
+
+    })
+
+  }
+
+  formatExperience(value: number): string {
+    return value + 'yrs';
+  }
+  formatSalary(value: number): string {
+    // seperate value with commas
+    return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    // return '$' + value;
   }
 
 }

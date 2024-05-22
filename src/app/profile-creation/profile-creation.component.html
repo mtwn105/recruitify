@@ -70,4 +70,78 @@
     </mat-card>
   </div>
 </ng-container>
+<ng-container *ngIf="currentStep==2 && !isRecruiter">
+  <h2 style=" text-align: center" class="amplify-text">
+    Now fill in the below details
+  </h2>
+  <div class="mx-auto text-center my-4">
+
+    <mat-card class="my-4 mx-auto card-profile mb-4">
+      <mat-card-content>
+
+        <form [formGroup]="jobSeekerProfileForm" (ngSubmit)="createJobSeeker()">
+
+          <mat-form-field class="card-inputs" appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" placeholder="Enter Your Name">
+          </mat-form-field>
+          <mat-form-field class="card-inputs" appearance="fill">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phone" placeholder="Enter Your Phone Number" type="tel">
+          </mat-form-field>
+          <mat-label>Experience: {{jobSeekerProfileForm.value.experience}} yrs</mat-label>
+          <mat-slider [displayWith]="formatExperience" class="card-inputs" discrete min="0" max="15" step="0.5">
+            <input formControlName="experience" matSliderThumb value="0">
+          </mat-slider>
+          <mat-form-field class="card-inputs" appearance="fill">
+            <mat-label>Education</mat-label>
+            <input matInput formControlName="education" placeholder="Enter your education">
+          </mat-form-field>
+          <mat-form-field class="card-inputs" appearance="fill">
+            <mat-label>Current Organization</mat-label>
+            <input matInput formControlName="currentOrg" placeholder="Enter your current organization">
+          </mat-form-field>
+          <mat-form-field class="card-inputs" appearance="fill">
+            <mat-label>Current Role</mat-label>
+            <input matInput formControlName="currentRole" placeholder="Enter your current role">
+          </mat-form-field>
+          <mat-form-field class="card-inputs" appearance="fill">
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city" placeholder="Enter your city">
+          </mat-form-field>
+          <mat-form-field class="card-inputs" appearance="fill">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" placeholder="Enter your country">
+          </mat-form-field>
+          <mat-label>Expected Salary: {{formatSalary(jobSeekerProfileForm.value.expectedSalary)}}</mat-label>
+          <mat-slider [displayWith]="formatSalary" class="card-inputs" discrete min="10000" max="1000000" step="10000">
+            <input formControlName="expectedSalary" matSliderThumb value="10000">
+          </mat-slider>
+          <mat-form-field class="card-inputs" appearance="fill">
+            <mat-label>Website</mat-label>
+            <input type="url" matInput formControlName="website" placeholder="Enter Your Website">
+          </mat-form-field>
+          <mat-form-field class="card-inputs" appearance="fill">
+            <mat-label>Linkedin</mat-label>
+            <input type="url" matInput formControlName="linkedin" placeholder="Enter Your LinkedIn Profile Url">
+          </mat-form-field>
+          <mat-form-field class="card-inputs" appearance="fill">
+            <mat-label>GitHub</mat-label>
+            <input type="url" matInput formControlName="github" placeholder="Enter Your GitHub Profile Url">
+          </mat-form-field>
+          <div class="m-2">
+            <mat-label>Upload Your Resume</mat-label>
+            <input type="file" (change)="onFileSelected($event)" hidden id="fileInput">
+            <p class="text-sm my-2">{{selectedFile?.name || ''}}</p>
+            <button color="accent" mat-raised-button type="button" (click)="onChooseAFile()">Browse</button>
+          </div>
+          <button [disabled]="!jobSeekerProfileForm.valid" (click)="createJobSeeker()" class="w-64 h-64 mx-4 p-4"
+            mat-raised-button color="primary">
+            Submit
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-container>
 <!-- </div> -->

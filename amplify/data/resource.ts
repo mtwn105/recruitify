@@ -14,7 +14,8 @@ const schema = a.schema({
   UserProfile: a
     .model({
       id: a.id(),
-      experience: a.integer(),
+      name: a.string(),
+      experience: a.float(),
       education: a.string(),
       currentOrg: a.string(),
       currentRole: a.string(),
@@ -24,6 +25,7 @@ const schema = a.schema({
       country: a.string(),
       expectedSalary: a.float(),
       resume: a.string(),
+      resumeFileName: a.string(),
       website: a.string(),
       linkedin: a.string(),
       github: a.string(),
