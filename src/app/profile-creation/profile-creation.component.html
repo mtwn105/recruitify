@@ -105,6 +105,22 @@
             <mat-label>Current Role</mat-label>
             <input matInput formControlName="currentRole" placeholder="Enter your current role">
           </mat-form-field>
+          <mat-form-field class="card-inputs">
+            <mat-label>Skills</mat-label>
+            <mat-chip-grid #chipGrid>
+              @for (skill of skills; track skill) {
+              <mat-chip-row color="primary" (removed)="removeSkill(skill)">
+                {{skill}}
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              }
+              <input placeholder="Add New Skill..." [matChipInputFor]="chipGrid"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="addSkill($event)" />
+            </mat-chip-grid>
+          </mat-form-field>
           <mat-form-field class="card-inputs" appearance="fill">
             <mat-label>City</mat-label>
             <input matInput formControlName="city" placeholder="Enter your city">

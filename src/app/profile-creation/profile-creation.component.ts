@@ -1,28 +1,33 @@
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { MatInputModule } from '@angular/material/input';
+import { MatSliderModule } from '@angular/material/slider';
 import { Router } from '@angular/router';
 import { AmplifyAuthenticatorModule, AuthenticatorService } from '@aws-amplify/ui-angular';
-import type { Schema } from '../../../amplify/data/resource';
-import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
-import { MatSliderModule } from '@angular/material/slider';
 import { generateClient } from 'aws-amplify/data';
-import { uploadData, getUrl } from "aws-amplify/storage";
-
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { uploadData } from "aws-amplify/storage";
+import type { Schema } from '../../../amplify/data/resource';
+import { MatIconModule } from '@angular/material/icon';
 const client = generateClient<Schema>();
 
 
 @Component({
   selector: 'app-profile-creation',
   standalone: true,
-  imports: [AmplifyAuthenticatorModule, CommonModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatCardModule, MatSliderModule],
+  imports: [AmplifyAuthenticatorModule, CommonModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatCardModule, MatSliderModule, MatChipsModule, MatIconModule],
   templateUrl: './profile-creation.component.html',
   styleUrl: './profile-creation.component.css'
 })
 export class ProfileCreationComponent {
+
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  skills: string[] = [];
 
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
@@ -258,7 +263,7 @@ export class ProfileCreationComponent {
         currentOrg: this.jobSeekerProfileForm.value.currentOrg,
         currentRole: this.jobSeekerProfileForm.value.currentRole,
         domain: this.jobSeekerProfileForm.value.domain,
-        skills: this.jobSeekerProfileForm.value.skills,
+        skills: this.skills.join(','),
         city: this.jobSeekerProfileForm.value.city,
         country: this.jobSeekerProfileForm.value.country,
         expectedSalary: this.jobSeekerProfileForm.value.expectedSalary,
@@ -285,6 +290,26 @@ export class ProfileCreationComponent {
     // seperate value with commas
     return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     // return '$' + value;
+  }
+
+  addSkill(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our fruit
+    if (value) {
+      this.skills.push(value);
+    }
+
+    // Clear the input value
+    event.chipInput!.clear();
+  }
+
+  removeSkill(skill: string): void {
+    const index = this.skills.indexOf(skill);
+
+    if (index >= 0) {
+      this.skills.splice(index, 1);
+    }
   }
 
 }
