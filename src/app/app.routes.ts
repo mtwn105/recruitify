@@ -5,11 +5,11 @@ import { JobsComponent } from './jobs/jobs.component';
 import { CreateJobComponent } from './create-job/create-job.component';
 
 export const routes: Routes = [
-  // {
-  //   path: '',
-  //   redirectTo: '/home',
-  //   pathMatch: 'full'
-  // },
+  {
+    path: '',
+    redirectTo: '/jobs',
+    pathMatch: 'full'
+  },
   // {
   //   path: 'home',
   //   component: AuthComponent

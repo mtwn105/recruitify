@@ -34,5 +34,9 @@ export class AuthService {
     localStorage.removeItem('userProfile');
   }
 
+  get isRecruiter() {
+    return this.userProfile.type == 'COMPANY';
+  }
+
 
 }

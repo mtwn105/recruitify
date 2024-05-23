@@ -12,6 +12,8 @@ import { AmplifyAuthenticatorModule, AuthenticatorService } from '@aws-amplify/u
 import type { Schema } from '../../../amplify/data/resource';
 import { generateClient } from 'aws-amplify/api';
 import { AuthService } from '../services/auth.service';
+import { downloadData } from 'aws-amplify/storage';
+
 const client = generateClient<Schema>();
 @Component({
   selector: 'app-jobs',
@@ -22,6 +24,7 @@ const client = generateClient<Schema>();
 })
 export class JobsComponent {
   jobs: any[] = [];
+  // myJobs: any[] = [];
   loggedInUser: any;
 
   constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService) { }
@@ -33,17 +36,86 @@ export class JobsComponent {
 
   }
   getUser() {
-
     this.loggedInUser = this.authService.userProfile;
-
+    if (this.loggedInUser.type == 'COMPANY') {
+      client.models.CompnayProfile.list({
+        filter: {
+          userId: {
+            eq: this.loggedInUser.username
+          }
+        }
+      }).then(profile => {
+        this.loggedInUser.profile = profile.data[0];
+      });
+    } else {
+      client.models.UserProfile.list({
+        filter: {
+          userId: {
+            eq: this.loggedInUser.username
+          }
+        }
+      }).then(profile => {
+        this.loggedInUser.profile = profile.data[0];
+      });
+    }
   }
 
   fetchJobs() {
     client.models.Job.list({
+      filter: {
+        companyId: {
+          attributeExists: true
+        }
+      }
     }).then(jobs => {
       console.log(jobs);
       this.jobs = jobs.data;
+      for (let job of this.jobs) {
+
+        if (job.skills) {
+          job.skills = job.skills.split(',');
+        }
+
+        console.log("Fetching profile for job: ", job.id);
+        if (job.companyId) {
+          client.models.CompnayProfile.list({
+            filter: {
+              userId: {
+                eq: job.companyId
+              }
+            }
+          }).then(profile => {
+            console.log("Job profile: ", profile);
+            job.companyProfile = profile.data[0];
+
+
+            if (job.companyProfile && job.companyProfile.logo) {
+              downloadData({
+                path: job.companyProfile.logo,
+              }).result.then(data => {
+                data.body.text().then(blob => {
+                  // write to bytes
+                  // console.log(blob);
+                  job.companyProfile.logo = blob;
+                })
+              })
+            }
+
+          });
+        }
+      }
     });
+
+    // client.models.Job.list({
+    //   filter: {
+    //     companyId: {
+    //       eq: this.loggedInUser.username
+    //     }
+    //   }
+    // }).then(jobs => {
+    //   console.log(jobs);
+    //   this.myJobs = jobs.data;
+    // });
   }
 
   createJob() {

@@ -20,7 +20,7 @@ import { AuthService } from '../services/auth.service';
 export class AuthComponent {
 
 
-  constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService) {
+  constructor(public authenticator: AuthenticatorService, private router: Router, public authService: AuthService) {
     Amplify.configure(config);
   }
 
@@ -62,6 +62,14 @@ export class AuthComponent {
   signOutAndGoHome(signOut: any) {
     signOut();
     this.authService.signOut();
+    this.router.navigate(['/']);
+  }
+
+  goToMyJobPostings() {
+    this.router.navigate(['/my-jobs']);
+  }
+
+  goHome() {
     this.router.navigate(['/']);
   }
 

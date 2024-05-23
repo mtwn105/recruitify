@@ -67,7 +67,7 @@ export class CreateJobComponent {
 
     client.models.Job.create({
       title: this.createJobForm.value.title,
-      companyId: this.authService.userProfile.username,
+      companyId: this.authService.userProfile.id,
       skills: this.skills.join(','),
       domain: this.createJobForm.value.domain,
       minExperience: this.createJobForm.value.minExperience,
