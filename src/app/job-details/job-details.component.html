@@ -25,14 +25,21 @@
           mat-raised-button disabled color="primary">
           {{jobApplication.status}}
         </button>
-        <button *ngIf="loggedInUser?.type =='COMPANY' && job?.companyId == authService?.userProfile?.id"
-          (click)="editJob()" class="w-64 h-64 p-4" mat-raised-button color="primary">
-          Edit Job Posting
+        <div class="flex">
+          <button *ngIf="loggedInUser?.type =='COMPANY' && job?.companyId == authService?.userProfile?.id"
+            (click)="editJob()" class="w-32 h-64 p-4" mat-raised-button color="primary">
+            Edit
 
-        </button>
+          </button>
+          <button *ngIf="loggedInUser?.type =='COMPANY' && job?.companyId == authService?.userProfile?.id"
+            (click)="deleteJob()" color="warn" class="w-32 h-64 p-4 ml-2" mat-raised-button>
+            Delete
+          </button>
+        </div>
         <button *ngIf="loggedInUser?.type =='COMPANY' && job?.companyId == authService?.userProfile?.id"
-          (click)="deleteJob()" class="w-64 h-64 p-4 mt-4" mat-raised-button>
-          Delete Job Posting
+          (click)="viewApplications()" class="w-64 h-64 p-4 mt-2" mat-raised-button color="accent">
+          View Applications
+
         </button>
       </div>
     </div>

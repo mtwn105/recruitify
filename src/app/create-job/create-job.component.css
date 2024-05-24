@@ -1,6 +1,8 @@
 .card-inputs {
-  width: 400px;
+  min-width: 400px;
+  width: 100%;
 }
 .card-profile {
-  width: 450px;
+  min-width: 450px;
+  width: 70%;
 }

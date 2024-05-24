@@ -33,7 +33,6 @@ export class EditJobComponent {
 
   addOnBlur = true;
   updateJobForm: FormGroup;
-  isRemote = false;
 
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   skills: string[] = [];
@@ -68,7 +67,6 @@ export class EditJobComponent {
     }).then(job => {
       console.log(job);
       this.job = job.data;
-      this.isRemote = this.job.isRemote;
 
       this.updateJobForm.patchValue({
         title: this.job.title,
@@ -164,7 +162,7 @@ export class EditJobComponent {
       salary: this.updateJobForm.value.salary,
       city: this.updateJobForm.value.city,
       country: this.updateJobForm.value.country,
-      isRemote: this.isRemote,
+      isRemote: this.updateJobForm.value.isRemote,
       description: this.updateJobForm.value.description,
     }).then(job => {
       console.log(job);

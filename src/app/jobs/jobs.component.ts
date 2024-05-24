@@ -38,27 +38,27 @@ export class JobsComponent {
   }
   getUser() {
     this.loggedInUser = this.authService.userProfile;
-    if (this.loggedInUser.type == 'COMPANY') {
-      client.models.CompnayProfile.list({
-        filter: {
-          userId: {
-            eq: this.loggedInUser.username
-          }
-        }
-      }).then(profile => {
-        this.loggedInUser.profile = profile.data[0];
-      });
-    } else {
-      client.models.UserProfile.list({
-        filter: {
-          userId: {
-            eq: this.loggedInUser.username
-          }
-        }
-      }).then(profile => {
-        this.loggedInUser.profile = profile.data[0];
-      });
-    }
+    // if (this.loggedInUser.type == 'COMPANY') {
+    //   client.models.CompnayProfile.list({
+    //     filter: {
+    //       userId: {
+    //         eq: this.loggedInUser.username
+    //       }
+    //     }
+    //   }).then(profile => {
+    //     this.loggedInUser.profile = profile.data[0];
+    //   });
+    // } else {
+    //   client.models.UserProfile.list({
+    //     filter: {
+    //       userId: {
+    //         eq: this.loggedInUser.username
+    //       }
+    //     }
+    //   }).then(profile => {
+    //     this.loggedInUser.profile = profile.data[0];
+    //   });
+    // }
   }
 
   fetchJobs() {

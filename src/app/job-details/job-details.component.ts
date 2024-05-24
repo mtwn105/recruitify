@@ -30,6 +30,7 @@ export class JobDetailsComponent {
   jobId: any;
   loggedInUser: any;
   jobApplication: any;
+  jobApplications: any;
 
   constructor(private activatedRoute: ActivatedRoute, public authService: AuthService, private router: Router) {
 
@@ -50,7 +51,11 @@ export class JobDetailsComponent {
       console.log(job);
       this.job = job.data;
 
-      this.fetchJobApplication();
+      if (this.loggedInUser.type != 'COMPANY') {
+        this.fetchJobApplication();
+      } else {
+        this.fetchJobApplications();
+      }
 
       if (this.job.skills) {
         this.job.skills = this.job.skills.split(',');
@@ -105,6 +110,20 @@ export class JobDetailsComponent {
     });
   }
 
+  fetchJobApplications() {
+    console.log("Fetching job applications for job: ", this.job.id);
+    client.models.JobApplications.list({
+      filter: {
+        jobId: {
+          eq: this.job.id
+        }
+      }
+    }).then(applications => {
+      console.log("Job applications: ", applications);
+      this.jobApplications = applications.data;
+    });
+  }
+
   applyJob() {
     console.log("Applying for job: ", this.job.id);
     client.models.JobApplications.create({
@@ -130,6 +149,10 @@ export class JobDetailsComponent {
       console.log(job);
       this.router.navigate(['/jobs']);
     });
+  }
+
+  viewApplications() {
+
   }
 
 }
