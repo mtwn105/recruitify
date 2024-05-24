@@ -1,0 +1,43 @@
+<ng-container *ngIf="job">
+
+  <div class="m-4 p-2">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center ">
+        <div class="image-container w-24 h-24 mr-4">
+          <img src="{{job?.companyProfile?.logo}}" alt="Logo" class="w-24 h-24" />
+        </div>
+        <div>
+          <h2 class="text-3xl font-bold">{{job.title}}</h2>
+          <p class="text-2xl text-gray-500">{{job.companyProfile?.name}}</p>
+          <p class="text-lg text-gray-500">{{job.country}}</p>
+        </div>
+      </div>
+      <!-- <div *ngIf="job.isRemote" class="flex items-center">
+        <mat-chip class="mat-chip" color="accent">REMOTE</mat-chip>
+      </div> -->
+      <div class="flex items-center">
+        <!-- <h2 class="text-2xl font-bold">{{job.salary | currency: 'USD'}}</h2> -->
+        <button (click)="applyJob()" class="w-64 h-64 p-4" mat-raised-button color="primary">
+          Apply Now
+
+        </button>
+      </div>
+    </div>
+    <div class="flex flex-wrap mt-2 justify-between">
+      <div class="flex flex-wrap">
+        <span *ngFor="let skill of job.skills"
+          class="badge-category bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-semibold mr-2 mb-2">{{skill}}</span>
+      </div>
+
+      <div>
+        <p class="text-lg text-gray-600">Posted {{job.createdAt | timeAgo}}
+        </p>
+      </div>
+    </div>
+    <div class="mt-4">
+      <h1 class="font-bold text-xl mt-4">Job Description:</h1>
+      <p class="text-lg">{{job.description}}</p>
+    </div>
+  </div>
+
+</ng-container>

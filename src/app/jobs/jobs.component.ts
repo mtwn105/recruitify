@@ -13,12 +13,13 @@ import type { Schema } from '../../../amplify/data/resource';
 import { generateClient } from 'aws-amplify/api';
 import { AuthService } from '../services/auth.service';
 import { downloadData } from 'aws-amplify/storage';
+import { JobCardComponentComponent } from '../job-card-component/job-card-component.component';
 
 const client = generateClient<Schema>();
 @Component({
   selector: 'app-jobs',
   standalone: true,
-  imports: [AmplifyAuthenticatorModule, CommonModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatCardModule, MatSliderModule, MatChipsModule, MatIconModule],
+  imports: [AmplifyAuthenticatorModule, CommonModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatCardModule, MatSliderModule, MatChipsModule, MatIconModule, JobCardComponentComponent],
   templateUrl: './jobs.component.html',
   styleUrl: './jobs.component.css'
 })

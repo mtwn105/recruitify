@@ -10,39 +10,9 @@
   </div>
 
   <div>
+    <h2 class="text-xl font-bold">Browse Jobs </h2>
     @for (job of jobs; track job) {
-    <mat-card class="flex flex-col p-2 shadow-lg rounded-lg border border-gray-200 my-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center">
-          <img src="{{job?.companyProfile?.logo}}" alt="Logo" class="w-12 h-12 mr-4" />
-          <div>
-            <h2 class="text-lg font-bold">{{job.title}}</h2>
-            <p class="text-sm text-gray-500">{{job.companyProfile?.name}}</p>
-          </div>
-        </div>
-        <div class="flex items-center">
-          <span class="badge-new bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold mr-2">NEW</span>
-          <!-- <span
-            class="badge-verified bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-semibold">Verified</span> -->
-        </div>
-      </div>
-      <div class="flex items-center mt-2">
-        <span class="flag-icon flag-icon-us mr-2"></span>
-        <p class="text-sm text-gray-500">{{job.country}}</p>
-      </div>
-      <div class="flex flex-wrap mt-4 justify-between">
-        <div class="flex flex-wrap">
-          <span *ngFor="let skill of job.skills"
-            class="badge-category bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-semibold mr-2 mb-2">{{skill}}</span>
-        </div>
-
-        <div>
-          <p class="text-sm text-gray-400">{{job.createdAt | date : 'dd-MM-yyyy hh:mm'}}
-          </p>
-        </div>
-      </div>
-
-    </mat-card>
+    <app-job-card-component [job]="job"></app-job-card-component>
 
     }
   </div>
