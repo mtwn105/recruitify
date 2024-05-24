@@ -1,0 +1,36 @@
+<div class="p-4">
+  <div>
+
+    <h2 class="text-xl font-bold">Your Job Postings </h2>
+
+    <div *ngIf="jobs && jobs.length > 0" class="flex justify-end">
+      <button (click)="createJob()" class="w-64 h-64 p-4" mat-raised-button color="primary">
+        Create a Job Posting
+        <span class="material-icons mx-2" style="font-size: 1.5rem;">
+          add
+        </span>
+      </button>
+    </div>
+
+    @for (job of jobs; track job) {
+    <app-job-card-component [job]="job"></app-job-card-component>
+
+    }
+
+    <ng-container *ngIf="!jobs || jobs.length == 0">
+      <div class="flex flex-col justify-center text-center">
+        <p class="text-center">
+          Not Posted Any Jobs Yet
+        </p>
+        <button (click)="createJob()" class="w-64 h-64 p-4 mx-auto my-4" mat-raised-button color="primary">
+          Create a Job Posting
+          <span class="material-icons mx-2" style="font-size: 1.5rem;">
+            add
+          </span>
+        </button>
+      </div>
+
+    </ng-container>
+
+  </div>
+</div>

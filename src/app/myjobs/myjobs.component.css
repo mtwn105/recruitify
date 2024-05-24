@@ -1,0 +1,19 @@
+.card-job {
+  width: 100%;
+}
+
+.badge-new {
+  @apply bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-verified {
+  @apply bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-category {
+  @apply bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-semibold mr-2 mb-2;
+}
+
+.flag-icon {
+  @apply mr-2;
+}

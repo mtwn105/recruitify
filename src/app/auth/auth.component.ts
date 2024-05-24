@@ -66,7 +66,7 @@ export class AuthComponent {
   }
 
   goToMyJobPostings() {
-    this.router.navigate(['/my-jobs']);
+    this.router.navigate(['/myjobs']);
   }
 
   goHome() {

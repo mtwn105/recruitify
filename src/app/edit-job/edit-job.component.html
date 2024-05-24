@@ -2,7 +2,7 @@
 
   <h1 style="padding: var(--amplify-space-large); text-align: center; font-weight: var(--amplify-font-weights-bold);"
     class="amplify-heading--2 ">
-    Create a Job Posting
+    Edit Job
   </h1>
 </div>
 
@@ -11,7 +11,7 @@
   <mat-card class="my-4 mx-auto card-profile">
     <mat-card-content>
 
-      <form [formGroup]="createJobForm">
+      <form *ngIf="job && updateJobForm" [formGroup]="updateJobForm">
 
         <mat-form-field class="card-inputs" appearance="fill">
           <mat-label>Title</mat-label>
@@ -23,15 +23,15 @@
         </mat-form-field>
         <mat-form-field class="card-inputs" appearance="fill">
           <mat-label>Description</mat-label>
-          <textarea rows="5" matInput formControlName="description" placeholder="Enter Job Description">
+          <textarea matInput formControlName="description" placeholder="Enter Job Description" rows="5">
             </textarea>
 
         </mat-form-field>
-        <mat-label>Min Experience: {{createJobForm.value.minExperience}} yrs</mat-label>
+        <mat-label>Min Experience: {{updateJobForm.value.minExperience}} yrs</mat-label>
         <mat-slider [displayWith]="formatExperience" class="card-inputs" discrete min="0" max="15" step="0.5">
           <input formControlName="minExperience" matSliderThumb value="0">
         </mat-slider>
-        <mat-label>Salary: {{formatSalary(createJobForm.value.salary)}}</mat-label>
+        <mat-label>Salary: {{formatSalary(updateJobForm.value.salary)}}</mat-label>
         <mat-slider [displayWith]="formatSalary" class="card-inputs" discrete min="10000" max="1000000" step="10000">
           <input formControlName="salary" matSliderThumb value="10000">
         </mat-slider>
@@ -51,7 +51,10 @@
               (matChipInputTokenEnd)="addSkill($event)" />
           </mat-chip-grid>
         </mat-form-field>
-        <mat-slide-toggle class="mb-4" formControlName="isRemote">Remote Position</mat-slide-toggle>
+
+        <!-- {{updateJobForm.value.isRemote}} -->
+
+        <mat-slide-toggle formControlName="isRemote" class="mb-4">Remote Position</mat-slide-toggle>
         <mat-form-field class="card-inputs" appearance="fill">
           <mat-label>City</mat-label>
           <input matInput formControlName="city" placeholder="Enter Job City">
@@ -60,7 +63,7 @@
           <mat-label>Country</mat-label>
           <input matInput formControlName="country" placeholder="Enter Job Country">
         </mat-form-field>
-        <button [disabled]="!createJobForm.valid" (click)="createJob()" class="w-64 h-64 mx-4 p-4" mat-raised-button
+        <button [disabled]="!updateJobForm.valid" (click)="updateJob()" class="w-64 h-64 mx-4 p-4" mat-raised-button
           color="primary">
           Submit
         </button>

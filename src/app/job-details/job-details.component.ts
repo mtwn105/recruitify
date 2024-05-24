@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSliderModule } from '@angular/material/slider';
 import { AmplifyAuthenticatorModule } from '@aws-amplify/ui-angular';
 import { TimeAgoPipe } from '../time-ago.pipe';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import type { Schema } from '../../../amplify/data/resource';
 import { generateClient } from 'aws-amplify/api';
 import { downloadData } from 'aws-amplify/storage';
@@ -30,7 +30,7 @@ export class JobDetailsComponent {
   jobId: any;
   loggedInUser: any;
 
-  constructor(private activatedRoute: ActivatedRoute, public authService: AuthService) {
+  constructor(private activatedRoute: ActivatedRoute, public authService: AuthService, private router: Router) {
 
   }
 
@@ -86,6 +86,20 @@ export class JobDetailsComponent {
 
   applyJob() {
 
+  }
+
+  editJob() {
+    this.router.navigate(['/edit-job', this.job.id]);
+  }
+
+  deleteJob() {
+    console.log("Deleting job: ", this.job.id);
+    client.models.Job.delete({
+      id: this.job.id
+    }).then(job => {
+      console.log(job);
+      this.router.navigate(['/jobs']);
+    });
   }
 
 }

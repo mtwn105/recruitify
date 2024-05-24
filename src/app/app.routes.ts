@@ -4,6 +4,8 @@ import { ProfileCreationComponent } from './profile-creation/profile-creation.co
 import { JobsComponent } from './jobs/jobs.component';
 import { CreateJobComponent } from './create-job/create-job.component';
 import { JobDetailsComponent } from './job-details/job-details.component';
+import { MyjobsComponent } from './myjobs/myjobs.component';
+import { EditJobComponent } from './edit-job/edit-job.component';
 
 export const routes: Routes = [
   {
@@ -24,8 +26,16 @@ export const routes: Routes = [
     component: JobsComponent
   },
   {
+    path: 'myjobs',
+    component: MyjobsComponent
+  },
+  {
     path: 'create-job',
     component: CreateJobComponent
+  },
+  {
+    path: 'edit-job/:id',
+    component: EditJobComponent
   },
   {
     path: 'job-details/:id',

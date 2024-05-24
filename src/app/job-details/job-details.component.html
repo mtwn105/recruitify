@@ -9,17 +9,27 @@
         <div>
           <h2 class="text-3xl font-bold">{{job.title}}</h2>
           <p class="text-2xl text-gray-500">{{job.companyProfile?.name}}</p>
-          <p class="text-lg text-gray-500">{{job.country}}</p>
+          <p class="text-lg text-gray-500">{{job.city}}, {{job.country}}</p>
         </div>
       </div>
       <!-- <div *ngIf="job.isRemote" class="flex items-center">
         <mat-chip class="mat-chip" color="accent">REMOTE</mat-chip>
       </div> -->
-      <div class="flex items-center">
+      <div class="flex flex-col items-center">
         <!-- <h2 class="text-2xl font-bold">{{job.salary | currency: 'USD'}}</h2> -->
-        <button (click)="applyJob()" class="w-64 h-64 p-4" mat-raised-button color="primary">
+        <button *ngIf="loggedInUser?.type !='COMPANY'" (click)="applyJob()" class="w-64 h-64 p-4" mat-raised-button
+          color="primary">
           Apply Now
 
+        </button>
+        <button *ngIf="loggedInUser?.type =='COMPANY' && job?.companyId == authService?.userProfile?.id"
+          (click)="editJob()" class="w-64 h-64 p-4" mat-raised-button color="primary">
+          Edit Job Posting
+
+        </button>
+        <button *ngIf="loggedInUser?.type =='COMPANY' && job?.companyId == authService?.userProfile?.id"
+          (click)="deleteJob()" class="w-64 h-64 p-4 mt-4" mat-raised-button>
+          Delete Job Posting
         </button>
       </div>
     </div>
@@ -35,7 +45,8 @@
       </div>
     </div>
     <div class="mt-4">
-      <h1 class="font-bold text-xl mt-4">Job Description:</h1>
+      <h1 class="font-bold text-2xl mt-4">Job Description</h1>
+      <h1 *ngIf="job.domain" class="font-bold text-lg my-2">Domain: {{job.domain}}</h1>
       <p class="text-lg">{{job.description}}</p>
     </div>
   </div>
