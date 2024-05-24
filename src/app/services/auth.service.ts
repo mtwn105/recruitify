@@ -25,7 +25,8 @@ export class AuthService {
   }
 
   setUserProfile(user: any) {
-    localStorage.setItem('userProfile', JSON.stringify(user.data));
+    console.log("Setting user profile", user);
+    localStorage.setItem('userProfile', JSON.stringify(user));
   }
 
   signOut() {
@@ -35,7 +36,7 @@ export class AuthService {
   }
 
   get isRecruiter() {
-    return this.userProfile.type == 'COMPANY';
+    return !!this.userProfile ? this.userProfile.type == 'COMPANY' : false;
   }
 
 

@@ -86,7 +86,6 @@ export class ProfileCreationComponent {
           eq: this.authService.user.username
         }
       },
-      limit: 1
     }).then(user => {
       console.log(user);
       if (!user || !user.data || !user.data.length) {
@@ -94,6 +93,8 @@ export class ProfileCreationComponent {
         this.newUser = true;
       } else {
         this.userDetails = user.data[0];
+        console.log("User", user.data[0]);
+        this.authService.setUserProfile(user.data[0]);
         this.newUser = false;
         // fetch user profile
         if (this.userDetails.type == 'COMPANY') {
@@ -104,7 +105,6 @@ export class ProfileCreationComponent {
                 eq: this.userDetails.id
               }
             },
-            limit: 1
           }).then(userProfile => {
             console.log(userProfile);
 
@@ -123,7 +123,6 @@ export class ProfileCreationComponent {
                 eq: this.userDetails.id
               }
             },
-            limit: 1
           }).then(userProfile => {
             console.log(userProfile);
             // this.userProfile = userProfile.data[0];
@@ -163,7 +162,7 @@ export class ProfileCreationComponent {
       console.log(user);
 
       this.userDetails = user;
-      this.authService.setUserProfile(user);
+      this.authService.setUserProfile(user.data);
 
       let logoPath = null;
 
@@ -229,7 +228,7 @@ export class ProfileCreationComponent {
     }).then(async user => {
       console.log(user);
       this.userDetails = user;
-      this.authService.setUserProfile(user);
+      this.authService.setUserProfile(user.data);
       let resumePath = null;
 
       if (!!this.previewUrl) {

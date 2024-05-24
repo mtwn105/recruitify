@@ -21,8 +21,14 @@ import { AuthService } from '../services/auth.service';
 })
 export class JobCardComponentComponent {
   @Input() job: any;
+  @Input() jobApplication: any;
+  loggedInUser: any;
 
   constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService) { }
+
+  ngOnInit() {
+    this.loggedInUser = this.authService.userProfile;
+  }
 
   loadJobDetails() {
     this.router.navigate(['/job-details', this.job.id]);

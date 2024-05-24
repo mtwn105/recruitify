@@ -6,6 +6,7 @@ import { CreateJobComponent } from './create-job/create-job.component';
 import { JobDetailsComponent } from './job-details/job-details.component';
 import { MyjobsComponent } from './myjobs/myjobs.component';
 import { EditJobComponent } from './edit-job/edit-job.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 export const routes: Routes = [
   {
@@ -40,5 +41,9 @@ export const routes: Routes = [
   {
     path: 'job-details/:id',
     component: JobDetailsComponent
-  }
+  },
+  {
+    path: 'edit-profile',
+    component: EditProfileComponent
+  },
 ];

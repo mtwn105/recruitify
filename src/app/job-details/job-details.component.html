@@ -17,10 +17,13 @@
       </div> -->
       <div class="flex flex-col items-center">
         <!-- <h2 class="text-2xl font-bold">{{job.salary | currency: 'USD'}}</h2> -->
-        <button *ngIf="loggedInUser?.type !='COMPANY'" (click)="applyJob()" class="w-64 h-64 p-4" mat-raised-button
-          color="primary">
+        <button *ngIf="loggedInUser?.type !='COMPANY' && !jobApplication" (click)="applyJob()" class="w-64 h-64 p-4"
+          mat-raised-button color="primary">
           Apply Now
-
+        </button>
+        <button *ngIf="loggedInUser?.type !='COMPANY' && jobApplication" (click)="applyJob()" class="w-64 h-64 p-4"
+          mat-raised-button disabled color="primary">
+          {{jobApplication.status}}
         </button>
         <button *ngIf="loggedInUser?.type =='COMPANY' && job?.companyId == authService?.userProfile?.id"
           (click)="editJob()" class="w-64 h-64 p-4" mat-raised-button color="primary">
@@ -33,7 +36,7 @@
         </button>
       </div>
     </div>
-    <div class="flex flex-wrap mt-2 justify-between">
+    <div class="flex flex-wrap mt-4 justify-between">
       <div class="flex flex-wrap">
         <span *ngFor="let skill of job.skills"
           class="badge-category bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-semibold mr-2 mb-2">{{skill}}</span>

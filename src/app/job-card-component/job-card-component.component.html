@@ -9,8 +9,11 @@
         <p class="text-lg text-gray-500">{{job.companyProfile?.name}}</p>
       </div>
     </div>
-    <div *ngIf="job.isRemote" class="flex items-center">
+    <div *ngIf="job.isRemote && !jobApplication" class="flex items-center">
       <mat-chip class="mat-chip" color="accent">REMOTE</mat-chip>
+    </div>
+    <div *ngIf="jobApplication" class="flex items-center">
+      <mat-chip class="mat-chip" color="accent">{{jobApplication?.status}}</mat-chip>
     </div>
     <div class="flex items-center">
       <h2 class="text-2xl font-bold">{{job.salary | currency: 'USD'}}</h2>

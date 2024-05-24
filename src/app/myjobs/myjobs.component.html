@@ -1,9 +1,10 @@
 <div class="p-4">
   <div>
 
-    <h2 class="text-xl font-bold">Your Job Postings </h2>
+    <h2 *ngIf="loggedInUser?.type=='COMPANY'" class="text-xl font-bold">Your Job Postings </h2>
+    <h2 *ngIf="loggedInUser?.type!='COMPANY'" class="text-xl font-bold">Your Job Applications </h2>
 
-    <div *ngIf="jobs && jobs.length > 0" class="flex justify-end">
+    <div *ngIf="loggedInUser?.type=='COMPANY' && jobs && jobs.length > 0" class="flex justify-end">
       <button (click)="createJob()" class="w-64 h-64 p-4" mat-raised-button color="primary">
         Create a Job Posting
         <span class="material-icons mx-2" style="font-size: 1.5rem;">
@@ -13,17 +14,28 @@
     </div>
 
     @for (job of jobs; track job) {
-    <app-job-card-component [job]="job"></app-job-card-component>
+    <app-job-card-component [jobApplication]="job?.application" [job]="job"></app-job-card-component>
 
     }
 
     <ng-container *ngIf="!jobs || jobs.length == 0">
       <div class="flex flex-col justify-center text-center">
-        <p class="text-center">
+        <p *ngIf="loggedInUser?.type=='COMPANY'" class="text-center">
           Not Posted Any Jobs Yet
         </p>
-        <button (click)="createJob()" class="w-64 h-64 p-4 mx-auto my-4" mat-raised-button color="primary">
+        <p *ngIf="loggedInUser?.type!='COMPANY'" class="text-center">
+          No Job Applications Yet
+        </p>
+        <button *ngIf="loggedInUser?.type=='COMPANY'" (click)="createJob()" class="w-64 h-64 p-4 mx-auto my-4"
+          mat-raised-button color="primary">
           Create a Job Posting
+          <span class="material-icons mx-2" style="font-size: 1.5rem;">
+            add
+          </span>
+        </button>
+        <button *ngIf="loggedInUser?.type!='COMPANY'" (click)="findJobs()" class="w-64 h-64 p-4 mx-auto my-4"
+          mat-raised-button color="primary">
+          Find Jobs
           <span class="material-icons mx-2" style="font-size: 1.5rem;">
             add
           </span>

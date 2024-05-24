@@ -27,16 +27,24 @@
   <ng-template amplifySlot="authenticated" let-user="user" let-signOut="signOut">
     <mat-toolbar>
       <img (click)="goHome()" class="logo" alt="Amplify logo" src="../../assets/Logo_Rectangle2.png" />
-      <button *ngIf="authService.isRecruiter" (click)="goToMyJobPostings()" color="accent" mat-raised-button
-        class="signout-button ml-4" aria-label="Example icon-button with menu icon">
+      <button (click)="goToMyJobPostings()" color="accent" mat-raised-button class="signout-button ml-4"
+        aria-label="Example icon-button with menu icon">
         My Jobs
       </button>
       <span class="spacer"></span>
-      <span class="text-sm mr-4">{{authService.user?.signInDetails?.loginId}}</span>
+      <button mat-button [matMenuTriggerFor]="menu"> <span
+          class="text-sm mx-2">{{authService.user?.signInDetails?.loginId}}</span><mat-icon
+          class="align-middle ">account_circle</mat-icon></button>
+
+      <mat-menu #menu="matMenu" xPosition="after">
+        <button (click)="editProfile()" mat-menu-item>Edit Profile</button>
+        <button (click)="signOutAndGoHome(signOut)" mat-menu-item>Sign out</button>
+      </mat-menu>
+      <!-- <span class="text-sm mr-4">{{authService.user?.signInDetails?.loginId}}</span>
       <button (click)="signOutAndGoHome(signOut)" color="accent" mat-raised-button class="signout-button"
         aria-label="Example icon-button with menu icon">
         Sign out
-      </button>
+      </button> -->
     </mat-toolbar>
     <router-outlet></router-outlet>
 

@@ -61,50 +61,114 @@ export class MyjobsComponent {
   }
 
   fetchJobs() {
-    client.models.Job.list({
-      filter: {
-        companyId: {
-          eq: this.authService.userProfile.id
-        }
-      }
-    }).then(jobs => {
-      console.log("My Jobs>", jobs);
-      this.jobs = jobs.data;
-      for (let job of this.jobs) {
 
-        if (job.skills) {
-          job.skills = job.skills.split(',');
-        }
+    if (this.authService.userProfile.type != 'COMPANY') {
 
-        console.log("Fetching profile for job: ", job.id);
-        if (job.companyId) {
-          client.models.CompnayProfile.list({
-            filter: {
-              userId: {
-                eq: job.companyId
+      client.models.JobApplications.list({
+        filter: {
+          userId: {
+            eq: this.authService.userProfile.id
+          }
+        }
+      }).then(applications => {
+
+        console.log("My Jobs>", applications);
+        let applicationsData = applications.data;
+
+        for (let application of applicationsData) {
+          if (application.jobId) {
+            client.models.Job.get({
+              id: application.jobId
+            }).then(job => {
+              console.log("Job>", job);
+              let jobData: any = job.data;
+              jobData.application = application;
+              if (jobData) {
+                if (jobData.skills) {
+                  jobData.skills = jobData.skills.split(',');
+                }
+
+                console.log("Fetching profile for job: ", jobData.id);
+                if (jobData.companyId) {
+                  client.models.CompnayProfile.list({
+                    filter: {
+                      userId: {
+                        eq: jobData.companyId
+                      }
+                    }
+                  }).then(profile => {
+                    console.log("Job profile: ", profile);
+                    jobData.companyProfile = profile.data[0];
+
+
+                    if (jobData.companyProfile && jobData.companyProfile.logo) {
+                      downloadData({
+                        path: jobData.companyProfile.logo,
+                      }).result.then(data => {
+                        data.body.text().then(blob => {
+                          // write to bytes
+                          // console.log(blob);
+                          jobData.companyProfile.logo = blob;
+                        })
+                      })
+                    }
+
+                  });
+                }
               }
-            }
-          }).then(profile => {
-            console.log("Job profile: ", profile);
-            job.companyProfile = profile.data[0];
-
-
-            if (job.companyProfile && job.companyProfile.logo) {
-              downloadData({
-                path: job.companyProfile.logo,
-              }).result.then(data => {
-                data.body.text().then(blob => {
-                  // write to bytes
-                  // console.log(blob);
-                  job.companyProfile.logo = blob;
-                })
-              })
-            }
-
-          });
+              this.jobs.push(jobData);
+            });
+          }
         }
-      }
-    });
+
+      });
+    } else {
+
+      client.models.Job.list({
+        filter: {
+          companyId: {
+            eq: this.authService.userProfile.id
+          }
+        }
+      }).then(jobs => {
+        console.log("My Jobs>", jobs);
+        this.jobs = jobs.data;
+        for (let job of this.jobs) {
+
+          if (job.skills) {
+            job.skills = job.skills.split(',');
+          }
+
+          console.log("Fetching profile for job: ", job.id);
+          if (job.companyId) {
+            client.models.CompnayProfile.list({
+              filter: {
+                userId: {
+                  eq: job.companyId
+                }
+              }
+            }).then(profile => {
+              console.log("Job profile: ", profile);
+              job.companyProfile = profile.data[0];
+
+
+              if (job.companyProfile && job.companyProfile.logo) {
+                downloadData({
+                  path: job.companyProfile.logo,
+                }).result.then(data => {
+                  data.body.text().then(blob => {
+                    // write to bytes
+                    // console.log(blob);
+                    job.companyProfile.logo = blob;
+                  })
+                })
+              }
+
+            });
+          }
+        }
+      });
+    }
 
     // client.models.Job.list({
     //   filter: {
@@ -120,5 +184,9 @@ export class MyjobsComponent {
 
   createJob() {
     this.router.navigate(['create-job']);
+  }
+
+  findJobs() {
+    this.router.navigate(['jobs']);
   }
 }
