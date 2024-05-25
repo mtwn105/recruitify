@@ -43,3 +43,18 @@
 .mat-chip {
   /* background-color: #ffd740 !important; */
 }
+
+.mat-chip-remote {
+  background-color: #ffd740 !important;
+  color: white !important;
+}
+
+.mat-chip-accepted {
+  background-color: #00da5e !important;
+  color: white !important;
+}
+
+.mat-chip-rejected {
+  background-color: rgb(255, 54, 54) !important;
+  color: white !important;
+}

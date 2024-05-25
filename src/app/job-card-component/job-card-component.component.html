@@ -1,38 +1,46 @@
-<mat-card (click)="loadJobDetails()" class="flex flex-col p-2 mat-elevation-z4 my-4">
-  <div class="flex items-center justify-between">
+<mat-card (click)="loadJobDetails()" class="flex flex-col px-8 py-4 mat-elevation-z4 my-4">
+  <div class="grid grid-cols-4 gap-4 items-center justify-between">
     <div class="flex items-center ">
-      <div class="image-container w-12 h-12  mr-4">
-        <img src="{{job?.companyProfile?.logo}}" alt="Logo" class="w-12 h-12" />
+      <div class="image-container w-16 h-16  mr-4">
+        <img src="{{job?.companyProfile?.logo}}" alt="Logo" class="w-16 h-16" />
       </div>
       <div>
         <h2 class="text-xl font-bold">{{job.title}}</h2>
         <p class="text-lg text-gray-500">{{job.companyProfile?.name}}</p>
       </div>
     </div>
+
+    <div *ngIf="jobApplication && jobApplication?.status == 'APPLIED'" class="flex items-center">
+      <mat-chip class="mat-chip mat-chip-remote" color="accent">{{jobApplication?.status}}</mat-chip>
+    </div>
+    <div *ngIf="jobApplication && jobApplication?.status == 'ACCEPTED'" class="flex items-center">
+      <mat-chip class="mat-chip mat-chip-accepted" color="accent">{{jobApplication?.status}}</mat-chip>
+    </div>
+    <div *ngIf="jobApplication && jobApplication?.status == 'REJECTED'" class="flex items-center">
+      <mat-chip class="mat-chip mat-chip-rejected" color="accent">{{jobApplication?.status}}</mat-chip>
+    </div>
     <div *ngIf="job.isRemote && !jobApplication" class="flex items-center">
-      <mat-chip class="mat-chip" color="accent">REMOTE</mat-chip>
+      <mat-chip class="mat-chip-remote " color="accent">REMOTE</mat-chip>
     </div>
-    <div *ngIf="jobApplication" class="flex items-center">
-      <mat-chip class="mat-chip" color="accent">{{jobApplication?.status}}</mat-chip>
+    <div *ngIf="!job.isRemote && !jobApplication" class="flex items-center">
+      <mat-chip class="mat-chip" color="accent">ONSITE</mat-chip>
     </div>
-    <div class="flex items-center">
+    <div class="mx-4 flex flex-wrap gap-2">
+      <mat-chip class="mr-2 border border-gray-400 px-2" *ngFor="let skill of job.skills">{{skill}}
+      </mat-chip>
+    </div>
+
+    <div class="flex justify-end items-center">
       <h2 class="text-2xl font-bold">{{job.salary | currency: 'USD'}}</h2>
     </div>
   </div>
-  <div class="flex items-center mt-2">
-    <span class="flag-icon flag-icon-us mr-2"></span>
-    <p class="text-sm text-gray-500">{{job.country}}</p>
-  </div>
-  <div class="flex flex-wrap mt-2 justify-between">
-    <div class="flex flex-wrap">
-      <span *ngFor="let skill of job.skills"
-        class="badge-category bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-semibold mr-2 mb-2">{{skill}}</span>
-    </div>
-
+  <div class="flex justify-between items-center mt-4">
+    <p class="text-lg text-gray-800">📍 {{job.country}}</p>
     <div>
-      <p class="text-sm text-gray-400">{{job.createdAt | timeAgo}}
+      <p class="text-lg text-gray-400">Posted {{job.createdAt | timeAgo}}
       </p>
     </div>
   </div>
+
 
 </mat-card>
