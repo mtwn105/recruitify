@@ -4,7 +4,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AmplifyAuthenticatorModule, AuthenticatorService } from '@aws-amplify/ui-angular';
 import { Amplify } from 'aws-amplify';
 import config from '../../../amplify_outputs.json'
@@ -24,7 +24,7 @@ const client = generateClient<Schema>();
 export class AuthComponent {
 
 
-  constructor(public authenticator: AuthenticatorService, private router: Router, public authService: AuthService) {
+  constructor(public authenticator: AuthenticatorService, public router: Router, public authService: AuthService, public activatedRoute: ActivatedRoute) {
     Amplify.configure(config);
   }
 
@@ -85,6 +85,9 @@ export class AuthComponent {
 
   goToMyJobPostings() {
     this.router.navigate(['/myjobs']);
+  }
+  goToJobPostings() {
+    this.router.navigate(['/jobs']);
   }
 
   goHome() {

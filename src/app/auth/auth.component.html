@@ -27,6 +27,10 @@
   <ng-template amplifySlot="authenticated" let-user="user" let-signOut="signOut">
     <mat-toolbar>
       <img (click)="goHome()" class="logo" alt="Amplify logo" src="../../assets/Logo_Rectangle2.png" />
+      <button *ngIf="router?.url!=('/jobs')" (click)="goToJobPostings()" color="accent" mat-raised-button
+        class="signout-button ml-4" aria-label="Example icon-button with menu icon">
+        Home
+      </button>
       <button (click)="goToMyJobPostings()" color="accent" mat-raised-button class="signout-button ml-4"
         aria-label="Example icon-button with menu icon">
         My Jobs
