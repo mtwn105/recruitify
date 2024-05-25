@@ -59,6 +59,40 @@ export class ApplicationCardComponent {
     });
   }
 
+  downloadResume() {
+    downloadData({
+      path: this.application?.userProfile?.resume,
+    }).result.then(data => {
+      data.body.text().then((text) => {
+        // write to file
+        const byteString = atob(text.split(',')[1]);
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+        }
+        const blob = new Blob([ab], { type: data.contentType });
+
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+
+        link.download = this.application?.userProfile?.resumeFileName ? this.application?.userProfile?.resumeFileName : 'resume';
+
+        link.click();
+
+
+
+        // this.selectedFile = new File([blob], profile?.data[0]?.resumeFileName ? profile?.data[0]?.resumeFileName : 'resume', { type: data.contentType });
+        // console.log(this.selectedFile);
+        // const reader = new FileReader();
+        // reader.onload = () => {
+        //   this.previewUrl = reader.result;
+        // };
+        // reader.readAsDataURL(this.selectedFile);
+        // this.existingFile = true;
+      })
+    })
+  }
 
 
 }

@@ -59,10 +59,6 @@
             <mat-label>Name</mat-label>
             <input matInput formControlName="name" placeholder="Enter Your Name">
           </mat-form-field>
-          <mat-form-field class="card-inputs" appearance="fill">
-            <mat-label>Phone Number</mat-label>
-            <input matInput formControlName="phone" placeholder="Enter Your Phone Number" type="tel">
-          </mat-form-field>
           <mat-label>Experience: {{jobSeekerProfileForm.value.experience}} yrs</mat-label>
           <mat-slider [displayWith]="formatExperience" class="card-inputs" discrete min="0" max="15" step="0.5">
             <input formControlName="experience" matSliderThumb value="0">
@@ -124,6 +120,8 @@
             <input accept=".pdf, .doc, .docx" type="file" (change)="onFileSelected($event)" hidden id="fileInput">
             <p class="text-sm my-2">{{selectedFile?.name || ''}}</p>
             <button color="accent" mat-raised-button type="button" (click)="onChooseAFile()">Browse</button>
+            <button class="ml-4" *ngIf="existingFile" color="accent" mat-raised-button type="button"
+              (click)="downloadFile()">Download</button>
           </div>
           <button [disabled]="!jobSeekerProfileForm.valid" (click)="updateJobSeeker()" class="w-64 h-64 mx-4 p-4"
             mat-raised-button color="primary">

@@ -45,6 +45,7 @@ export class EditProfileComponent {
   jobSeekerProfileForm: FormGroup;
 
   profileId = '';
+  existingFile: boolean = false;
 
   constructor(public authenticator: AuthenticatorService, private router: Router, private formBuilder: FormBuilder, private authService: AuthService) {
     this.recruiterProfileForm = this.formBuilder.group({
@@ -92,6 +93,9 @@ export class EditProfileComponent {
         }).then(profile => {
           console.log(profile);
           if (profile && profile.data && profile.data.length > 0) {
+            if (profile.data[0].id) {
+              this.profileId = profile.data[0].id;
+            }
             this.recruiterProfileForm.patchValue({
               name: profile.data[0].name,
               description: profile.data[0].description,
@@ -113,7 +117,63 @@ export class EditProfileComponent {
           }
         });
       } else {
+        client.models.UserProfile.list({
+          filter: {
+            userId: {
+              eq: this.userDetails.id
+            }
+          }
+        }).then(profile => {
+          console.log(profile);
+          if (profile && profile.data && profile.data.length > 0) {
+            if (profile.data[0].id) {
+              this.profileId = profile.data[0].id;
+            }
+            if (profile.data[0].skills) {
+              this.skills = profile.data[0].skills.split(',');
+            }
+            this.jobSeekerProfileForm.patchValue({
+              name: profile.data[0].name,
+              experience: profile.data[0].experience,
+              education: profile.data[0].education,
+              currentOrg: profile.data[0].currentOrg,
+              currentRole: profile.data[0].currentRole,
+              domain: profile.data[0].domain,
+              city: profile.data[0].city,
+              country: profile.data[0].country,
+              expectedSalary: profile.data[0].expectedSalary,
+              resume: profile.data[0].resume,
+              website: profile.data[0].website,
+              linkedin: profile.data[0].linkedin,
+              github: profile.data[0].github,
+            })
+            if (profile.data[0].resume) {
+              downloadData({
+                path: profile.data[0].resume,
+              }).result.then(data => {
+                data.body.text().then((text) => {
+                  // write to file
+                  const byteString = atob(text.split(',')[1]);
+                  const ab = new ArrayBuffer(byteString.length);
+                  const ia = new Uint8Array(ab);
+                  for (let i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                  }
+                  const blob = new Blob([ab], { type: data.contentType });
 
+                  this.selectedFile = new File([blob], profile?.data[0]?.resumeFileName ? profile?.data[0]?.resumeFileName : 'resume', { type: data.contentType });
+                  console.log(this.selectedFile);
+                  const reader = new FileReader();
+                  reader.onload = () => {
+                    this.previewUrl = reader.result;
+                  };
+                  reader.readAsDataURL(this.selectedFile);
+                  this.existingFile = true;
+                })
+              })
+            }
+          }
+        });
       }
     }
   }
@@ -138,7 +198,8 @@ export class EditProfileComponent {
       logoPath = `companyLogos/${this.authService?.userProfile?.id}`
     }
 
-    client.models.CompnayProfile.create({
+    client.models.CompnayProfile.update({
+      id: this.profileId,
       name: this.recruiterProfileForm.value.name,
       description: this.recruiterProfileForm.value.description,
       industry: this.recruiterProfileForm.value.industry,
@@ -163,6 +224,7 @@ export class EditProfileComponent {
         this.previewUrl = reader.result;
       };
       reader.readAsDataURL(this.selectedFile);
+      this.existingFile = false;
     }
   }
 
@@ -173,7 +235,7 @@ export class EditProfileComponent {
     }
   }
 
-  updateJobSeeker() {
+  async updateJobSeeker() {
     console.log(this.jobSeekerProfileForm.value);
 
     if (!this.jobSeekerProfileForm.valid) {
@@ -181,50 +243,40 @@ export class EditProfileComponent {
       return;
     }
 
-    client.models.User.create({
+    let resumePath = null;
+
+    if (!!this.previewUrl) {
+      const result = await uploadData({
+        data: this.previewUrl,
+        path: `resumes/${this.authService?.userProfile?.id}`,
+      }).result;
+      console.log(result);
+      resumePath = `resumes/${this.authService?.userProfile?.id}`
+    }
+
+    client.models.UserProfile.update({
+      id: this.profileId,
       name: this.jobSeekerProfileForm.value.name,
-      type: 'INDIVIDUAL',
-      username: this.authService.user.username,
-      email: this.authService.user.signInDetails.loginId,
-    }).then(async user => {
-      console.log(user);
-      this.userDetails = user;
-      this.authService.setUserProfile(user.data);
-      let resumePath = null;
-
-      if (!!this.previewUrl) {
-        const result = await uploadData({
-          data: this.previewUrl,
-          path: `resumes/${user.data?.id}`,
-        }).result;
-        console.log(result);
-        resumePath = `resumes/${user.data?.id}`
-      }
-
-      client.models.UserProfile.create({
-        name: this.jobSeekerProfileForm.value.name,
-        experience: this.jobSeekerProfileForm.value.experience,
-        education: this.jobSeekerProfileForm.value.education,
-        currentOrg: this.jobSeekerProfileForm.value.currentOrg,
-        currentRole: this.jobSeekerProfileForm.value.currentRole,
-        domain: this.jobSeekerProfileForm.value.domain,
-        skills: this.skills.join(','),
-        city: this.jobSeekerProfileForm.value.city,
-        country: this.jobSeekerProfileForm.value.country,
-        expectedSalary: this.jobSeekerProfileForm.value.expectedSalary,
-        resume: resumePath,
-        resumeFileName: this.selectedFile?.name,
-        website: this.jobSeekerProfileForm.value.website,
-        linkedin: this.jobSeekerProfileForm.value.linkedin,
-        github: this.jobSeekerProfileForm.value.github,
-        userId: user.data?.id,
-      }).then(profile => {
-        console.log(profile);
-        this.userProfile = profile;
-        this.router.navigate(['/jobs']);
-      });
-
-    })
+      experience: this.jobSeekerProfileForm.value.experience,
+      education: this.jobSeekerProfileForm.value.education,
+      currentOrg: this.jobSeekerProfileForm.value.currentOrg,
+      currentRole: this.jobSeekerProfileForm.value.currentRole,
+      domain: this.jobSeekerProfileForm.value.domain,
+      skills: this.skills.join(','),
+      city: this.jobSeekerProfileForm.value.city,
+      country: this.jobSeekerProfileForm.value.country,
+      expectedSalary: this.jobSeekerProfileForm.value.expectedSalary,
+      resume: resumePath,
+      resumeFileName: this.selectedFile?.name,
+      website: this.jobSeekerProfileForm.value.website,
+      linkedin: this.jobSeekerProfileForm.value.linkedin,
+      github: this.jobSeekerProfileForm.value.github,
+      userId: this.authService?.userProfile?.id,
+    }).then(profile => {
+      console.log(profile);
+      this.userProfile = profile;
+      this.router.navigate(['/jobs']);
+    });
 
   }
 
@@ -253,6 +305,27 @@ export class EditProfileComponent {
     if (index >= 0) {
       this.skills.splice(index, 1);
     }
+  }
+
+  downloadFile() {
+    if (!this.existingFile || !this.selectedFile) {
+      return;
+    }
+    // Create a URL for the file
+    const url = URL.createObjectURL(this.selectedFile);
+
+    // Create a temporary anchor element
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = this.selectedFile?.name;
+
+    // Programmatically click the anchor element to trigger the download
+    document.body.appendChild(a);
+    a.click();
+
+    // Clean up by removing the anchor element and revoking the blob URL
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
 }
