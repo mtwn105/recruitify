@@ -1,0 +1,15 @@
+.card-inputs {
+  width: 400px;
+}
+.card-profile {
+  width: 450px;
+}
+
+.image-container {
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  overflow: hidden;
+  img {
+    object-fit: cover;
+  }
+}
