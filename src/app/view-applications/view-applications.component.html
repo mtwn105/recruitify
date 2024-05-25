@@ -1,0 +1,45 @@
+<ng-container *ngIf="job">
+
+  <div class="m-4 p-2">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center ">
+        <div class="image-container w-24 h-24 mr-4">
+          <img src="{{job?.companyProfile?.logo}}" alt="Logo" class="w-24 h-24" />
+        </div>
+        <div>
+          <h2 class="text-3xl font-bold">{{job.title}}</h2>
+          <p class="text-2xl text-gray-500">{{job.companyProfile?.name}}</p>
+          <p class="text-lg text-gray-500">{{job.city}}, {{job.country}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-wrap mt-4 justify-between">
+      <div class="flex flex-wrap">
+        <span *ngFor="let skill of job.skills"
+          class="badge-category bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-semibold mr-2 mb-2">{{skill}}</span>
+      </div>
+
+      <div>
+        <p class="text-lg text-gray-600">Posted {{job.createdAt | timeAgo}}
+        </p>
+      </div>
+    </div>
+    <div class="mt-4">
+      <h1 class="font-bold text-2xl mt-4">Applications</h1>
+      <h1 *ngIf="!jobApplications || jobApplications.length == 0" class="font-bold text-lg my-2">No applicants so far.
+      </h1>
+      <!-- <p class="text-lg">{{job.description}}</p> -->
+      <ng-container *ngIf="jobApplications && jobApplications.length > 0">
+
+        <div>
+          <div *ngFor="let jobApplication of jobApplications">
+            <app-application-card [application]="jobApplication"></app-application-card>
+          </div>
+        </div>
+
+      </ng-container>
+
+    </div>
+  </div>
+
+</ng-container>

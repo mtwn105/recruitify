@@ -1,0 +1,36 @@
+<mat-card class="flex flex-col p-2 mat-elevation-z4 my-4">
+  <div class="flex items-center justify-between">
+    <div class="flex items-center ">
+      <div>
+        <h2 class="text-lg font-bold">Name: {{application?.user?.name}}</h2>
+        <!-- <p class="text-lg text-gray-500">{{job.companyProfile?.name}}</p> -->
+      </div>
+    </div>
+    <div *ngIf="application?.status == 'ACCEPTED' || application?.status == 'REJECTED'" class="flex items-center">
+      <mat-chip class="mat-chip" color="accent">{{application?.status}}</mat-chip>
+    </div>
+    <div *ngIf="application?.status != 'ACCEPTED' && application?.status != 'REJECTED'" class="flex">
+      <button (click)="accept()" class="w-32 h-64 p-4" mat-raised-button color="primary">
+        Accept
+      </button>
+      <button (click)="reject()" color="warn" class="w-32 h-64 p-4 ml-2" mat-raised-button>
+        Reject
+      </button>
+    </div>
+  </div>
+  <div class="flex items-center mt-2">
+    <p class="text-sm text-gray-500">Experience: {{application?.userProfile?.experience}} Years</p>
+  </div>
+  <div class="flex flex-wrap mt-2 justify-between">
+    <div class="flex flex-wrap">
+      <span *ngFor="let skill of application?.userProfile?.skills"
+        class="badge-category bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-semibold mr-2 mb-2">{{skill}}</span>
+    </div>
+    <!--
+    <div>
+      <p class="text-sm text-gray-400">{{job.createdAt | timeAgo}}
+      </p>
+    </div> -->
+  </div>
+
+</mat-card>

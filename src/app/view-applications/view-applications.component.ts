@@ -1,4 +1,3 @@
-import { AuthService } from './../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -9,27 +8,29 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSliderModule } from '@angular/material/slider';
 import { AmplifyAuthenticatorModule } from '@aws-amplify/ui-angular';
-import { TimeAgoPipe } from '../time-ago.pipe';
-import { ActivatedRoute, Router } from '@angular/router';
+import { JobCardComponentComponent } from '../job-card-component/job-card-component.component';
 import type { Schema } from '../../../amplify/data/resource';
 import { generateClient } from 'aws-amplify/api';
 import { downloadData } from 'aws-amplify/storage';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { TimeAgoPipe } from '../time-ago.pipe';
+import { ApplicationCardComponent } from '../application-card/application-card.component';
 
 const client = generateClient<Schema>();
 
 @Component({
-  selector: 'app-job-details',
+  selector: 'app-view-applications',
   standalone: true,
-  imports: [AmplifyAuthenticatorModule, CommonModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatCardModule, MatSliderModule, MatChipsModule, MatIconModule, TimeAgoPipe],
-  templateUrl: './job-details.component.html',
-  styleUrl: './job-details.component.css'
+  imports: [AmplifyAuthenticatorModule, CommonModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatCardModule, MatSliderModule, MatChipsModule, MatIconModule, TimeAgoPipe, ApplicationCardComponent],
+  templateUrl: './view-applications.component.html',
+  styleUrl: './view-applications.component.css'
 })
-export class JobDetailsComponent {
-
+export class ViewApplicationsComponent {
   job: any;
   jobId: any;
   loggedInUser: any;
-  jobApplication: any;
+  jobApplications: any;
 
   constructor(private activatedRoute: ActivatedRoute, public authService: AuthService, private router: Router) {
 
@@ -39,6 +40,7 @@ export class JobDetailsComponent {
     this.activatedRoute.paramMap.subscribe(params => {
       this.jobId = params.get('id');
       this.fetchJobDetails();
+      this.fetchJobApplications();
     });
     this.loggedInUser = this.authService.userProfile;
   }
@@ -49,10 +51,6 @@ export class JobDetailsComponent {
     }).then(job => {
       console.log(job);
       this.job = job.data;
-
-      if (this.loggedInUser.type != 'COMPANY') {
-        this.fetchJobApplication();
-      }
 
       if (this.job.skills) {
         this.job.skills = this.job.skills.split(',');
@@ -89,21 +87,42 @@ export class JobDetailsComponent {
     });
   }
 
-  fetchJobApplication() {
-    console.log("Fetching job application for job: ", this.job.id);
+  fetchJobApplications() {
+
+    console.log("Fetching job applications for job: ", this.jobId);
     client.models.JobApplications.list({
       filter: {
         jobId: {
-          eq: this.job.id
-        },
-        userId: {
-          eq: this.loggedInUser.id
+          eq: this.jobId
         }
       }
     }).then(applications => {
       console.log("Job applications: ", applications);
-      this.jobApplication = applications.data[0];
-      console.log("Job application: ", this.jobApplication);
+      this.jobApplications = applications.data;
+      for (let application of this.jobApplications) {
+        console.log("Fetching profile for application: ", application);
+        client.models.UserProfile.list({
+          filter: {
+            userId: {
+              eq: application.userId
+            }
+          }
+        }).then(profile => {
+          console.log("Job application profile: ", profile);
+          if (profile.data.length > 0) {
+            application.userProfile = profile.data[0];
+            application.userProfile.skills = application?.userProfile?.skills.split(',');
+          }
+          // application.userProfile = profile.data;
+        });
+        client.models.User.get({
+          id: application.userId
+        }).then(profile => {
+          console.log("Job application user: ", profile);
+          application.user = profile.data;
+        });
+
+      }
     });
   }
 
@@ -135,7 +154,6 @@ export class JobDetailsComponent {
   }
 
   viewApplications() {
-    this.router.navigate(['/job-applications', this.job.id]);
-  }
 
+  }
 }
