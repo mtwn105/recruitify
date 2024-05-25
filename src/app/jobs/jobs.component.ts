@@ -71,6 +71,18 @@ export class JobsComponent {
     }).then(jobs => {
       console.log(jobs);
       this.jobs = jobs.data;
+
+      // sort by createdAt desc
+      this.jobs.sort((a, b) => {
+        if (a.createdAt > b.createdAt) {
+          return -1;
+        } else if (a.createdAt < b.createdAt) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
       for (let job of this.jobs) {
 
         if (job.skills) {

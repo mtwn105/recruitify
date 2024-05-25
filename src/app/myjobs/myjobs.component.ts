@@ -69,11 +69,22 @@ export class MyjobsComponent {
           userId: {
             eq: this.authService.userProfile.id
           }
-        }
+        },
       }).then(applications => {
 
         console.log("My Jobs>", applications);
         let applicationsData = applications.data;
+
+        // sort by createdAt desc
+        applicationsData.sort((a, b) => {
+          if (a.createdAt > b.createdAt) {
+            return -1;
+          } else if (a.createdAt < b.createdAt) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
 
         for (let application of applicationsData) {
           if (application.jobId) {
@@ -133,6 +144,19 @@ export class MyjobsComponent {
       }).then(jobs => {
         console.log("My Jobs>", jobs);
         this.jobs = jobs.data;
+
+        // sort by createdAt desc
+        this.jobs.sort((a, b) => {
+          if (a.createdAt > b.createdAt) {
+            return -1;
+          } else if (a.createdAt < b.createdAt) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+
+
         for (let job of this.jobs) {
 
           if (job.skills) {
