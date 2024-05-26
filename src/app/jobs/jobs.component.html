@@ -1,19 +1,50 @@
 <div class="py-4 px-12">
-  <div class="flex justify-end">
-    <button *ngIf="loggedInUser?.type == 'COMPANY'" (click)="createJob()" class="w-64 h-64 p-4" mat-raised-button
-      color="primary">
-      Create a Job Posting
-      <span class="material-icons mx-2" style="font-size: 1.5rem;">
-        add
-      </span>
-    </button>
+  <div class="flex">
+    <div class="grow">
+      <!-- <mat-form-field class="w-100">
+        <mat-label>Find Job</mat-label>
+        <input matInput placeholder="Search Jobs in AI, Java, ML, etc" [(ngModel)]="searchJobTerm">
+      </mat-form-field> -->
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Find Job</mat-label>
+        <input (input)="filterJobs($event)" [(ngModel)]="searchJobTerm" matInput
+          placeholder="Search Jobs in AI, Java, ML, etc">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+    <div *ngIf="loggedInUser?.type == 'COMPANY'" class="ml-4 flex-none items-center">
+      <button (click)="createJob()" class="w-64 h-64 p-4 my-auto" mat-raised-button color="primary">
+        Create a Job Posting
+        <span class="material-icons mx-2" style="font-size: 1.5rem;">
+          add
+        </span>
+      </button>
+    </div>
   </div>
 
   <div>
     <h2 class="text-xl font-bold">Browse Jobs </h2>
-    @for (job of jobs; track job) {
-    <app-job-card-component [job]="job"></app-job-card-component>
+    <ng-container *ngIf="!searchJobTerm || searchJobTerm.length == 0">
 
-    }
+      @for (job of jobs; track job) {
+      <app-job-card-component [job]="job"></app-job-card-component>
+
+      }
+
+    </ng-container>
+    <ng-container *ngIf="searchJobTerm && searchJobTerm.length > 0 && filteredJobs && filteredJobs.length > 0">
+      @for (job of filteredJobs; track job) {
+      <app-job-card-component [job]="job"></app-job-card-component>
+
+      }
+    </ng-container>
+    <ng-container
+      *ngIf="(searchJobTerm && searchJobTerm.length > 0 && filteredJobs?.length == 0) || (jobs?.length == 0)">
+      <div class="flex flex-col justify-center text-center">
+        <p class="text-center">
+          No Jobs Found
+        </p>
+      </div>
+    </ng-container>
   </div>
 </div>

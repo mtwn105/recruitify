@@ -84,3 +84,7 @@ body {
 mat-toolbar {
   background-color: #ffd740 !important;
 }
+
+.mdc-notched-outline__notch {
+  border-right: none;
+}

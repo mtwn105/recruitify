@@ -15,20 +15,23 @@ import { AuthService } from '../services/auth.service';
 import { downloadData } from 'aws-amplify/storage';
 import { JobCardComponentComponent } from '../job-card-component/job-card-component.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { LoadingInterceptorService } from '../loading-interceptor.service';
 
 const client = generateClient<Schema>();
 @Component({
   selector: 'app-jobs',
   standalone: true,
-  imports: [AmplifyAuthenticatorModule, CommonModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatCardModule, MatSliderModule, MatChipsModule, MatIconModule, JobCardComponentComponent],
+  imports: [AmplifyAuthenticatorModule, CommonModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatCardModule, MatSliderModule, MatChipsModule, MatIconModule, JobCardComponentComponent, FormsModule],
   templateUrl: './jobs.component.html',
   styleUrl: './jobs.component.css',
 })
 export class JobsComponent {
   jobs: any[] = [];
+  filteredJobs: any[] = [];
   // myJobs: any[] = [];
   loggedInUser: any;
+  searchJobTerm = '';
 
   constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService, private loadingService: LoadingInterceptorService) {
 
@@ -139,6 +142,17 @@ export class JobsComponent {
 
   createJob() {
     this.router.navigate(['create-job']);
+  }
+
+  filterJobs(event: any) {
+    const value = event.target.value.toLowerCase()
+    this.filteredJobs = this.jobs.filter((job) => {
+      let skills = job?.skills
+      if (skills) {
+        skills = skills.join(",").toLowerCase();
+      }
+      return job?.title?.toLowerCase().includes(value) || job?.companyProfile?.name?.toLowerCase().includes(value) || (skills ? skills.includes(value) : true) || job?.domain?.toLowerCase().includes(value) || job?.country?.toLowerCase().includes(value) || job?.city?.toLowerCase().includes(value)
+    });
   }
 
 }
