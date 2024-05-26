@@ -1,12 +1,14 @@
 <mat-card (click)="loadJobDetails()" class="flex flex-col px-8 py-4 mat-elevation-z4 my-4">
   <div class="grid grid-cols-4 gap-4 items-center justify-between">
+
     <div class="flex items-center ">
-      <div class="image-container w-16 h-16  mr-4">
-        <img src="{{job?.companyProfile?.logo}}" alt="Logo" class="w-16 h-16" />
+      <div class="image-container w-20 h-20  mr-4">
+        <img src="{{job?.companyProfile?.logo}}" alt="Logo" class="w-20 h-20" />
       </div>
       <div>
         <h2 class="text-xl font-bold">{{job.title}}</h2>
-        <p class="text-lg text-gray-500">{{job.companyProfile?.name}}</p>
+        <p class="text-lg text-gray-800">{{job.companyProfile?.name}}</p>
+        <p class="text-sm text-gray-600">{{job.country}}</p>
       </div>
     </div>
 
@@ -31,16 +33,20 @@
     </div>
 
     <div class="flex justify-end items-center">
-      <h2 class="text-2xl font-bold">{{job.salary | currency: 'USD'}}</h2>
+      <div class="flex flex-col items-end">
+        <h2 class="text-2xl font-bold">{{job.salary | currency: 'USD'}}</h2>
+        <p class="text-sm text-gray-400">Posted {{job.createdAt | timeAgo}}
+        </p>
+      </div>
     </div>
   </div>
-  <div class="flex justify-between items-center mt-4">
+  <!-- <div class="flex justify-between items-center mt-4">
     <p class="text-lg text-gray-800">📍 {{job.country}}</p>
     <div>
       <p class="text-lg text-gray-400">Posted {{job.createdAt | timeAgo}}
       </p>
     </div>
-  </div>
+  </div> -->
 
 
 </mat-card>
