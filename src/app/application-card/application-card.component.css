@@ -21,15 +21,15 @@
 .mat-mdc-card {
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-  transition: transform 0.3s ease, background-color 0.3s ease;
-  cursor: pointer;
+  /* transition: transform 0.3s ease, background-color 0.3s ease; */
+  /* cursor: pointer; */
 }
 
-.mat-mdc-card:hover {
-  background-image: linear-gradient(180deg, #683ab76c, white);
-  /* color: #ffffff; */
-  transform: scale(1.01);
-}
+/* .mat-mdc-card:hover { */
+/* background-image: linear-gradient(180deg, #683ab76c, white); */
+/* color: #ffffff; */
+/* transform: scale(1.01); */
+/* } */
 
 .image-container {
   border-radius: 50%;
@@ -42,4 +42,13 @@
 
 .mat-chip {
   /* background-color: #ffd740 !important; */
+}
+.mat-chip-accepted {
+  background-color: #00da5e !important;
+  color: white !important;
+}
+
+.mat-chip-rejected {
+  background-color: rgb(255, 54, 54) !important;
+  color: white !important;
 }

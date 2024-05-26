@@ -43,3 +43,8 @@
 .mat-chip {
   /* background-color: #ffd740 !important; */
 }
+.mat-chip-remote {
+  background-color: #ffd740 !important;
+  color: white !important;
+  vertical-align: middle !important;
+}

@@ -7,7 +7,9 @@
           <img src="{{job?.companyProfile?.logo}}" alt="Logo" class="w-24 h-24" />
         </div>
         <div>
-          <h2 class="text-3xl font-bold">{{job.title}}</h2>
+          <h2 class="text-3xl font-bold">{{job.title}}
+            <mat-chip *ngIf="job.isRemote" class="mat-chip-remote " color="accent">REMOTE</mat-chip>
+          </h2>
           <p class="text-2xl text-gray-500">{{job.companyProfile?.name}}</p>
           <p class="text-lg text-gray-500">{{job.city}}, {{job.country}}</p>
         </div>

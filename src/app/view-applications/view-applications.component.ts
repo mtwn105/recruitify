@@ -86,9 +86,7 @@ export class ViewApplicationsComponent {
         });
       }
 
-    }).finally(() => {
-      this.loadingService.hide();
-    });
+    })
   }
 
   fetchJobApplications() {
@@ -103,6 +101,17 @@ export class ViewApplicationsComponent {
     }).then(applications => {
       console.log("Job applications: ", applications);
       this.jobApplications = applications.data;
+      // sort descending
+      this.jobApplications.sort((a: any, b: any) => {
+        if (a.createdAt > b.createdAt) {
+          return -1;
+        } else if (a.createdAt < b.createdAt) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
       for (let application of this.jobApplications) {
         console.log("Fetching profile for application: ", application);
         client.models.UserProfile.list({
@@ -127,6 +136,8 @@ export class ViewApplicationsComponent {
         });
 
       }
+    }).finally(() => {
+      this.loadingService.hide();
     });
   }
 

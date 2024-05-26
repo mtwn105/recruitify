@@ -6,8 +6,11 @@
         <!-- <p class="text-lg text-gray-500">{{job.companyProfile?.name}}</p> -->
       </div>
     </div>
-    <div *ngIf="application?.status == 'ACCEPTED' || application?.status == 'REJECTED'" class="flex items-center">
-      <mat-chip class="mat-chip" color="accent">{{application?.status}}</mat-chip>
+    <div *ngIf="application?.status == 'ACCEPTED'" class="flex items-center">
+      <mat-chip class="mat-chip-accepted" color="accent">{{application?.status}}</mat-chip>
+    </div>
+    <div *ngIf="application?.status == 'REJECTED'" class="flex items-center">
+      <mat-chip class="mat-chip-rejected" color="accent">{{application?.status}}</mat-chip>
     </div>
     <div *ngIf="application?.status != 'ACCEPTED' && application?.status != 'REJECTED'" class="flex">
       <button (click)="accept()" class="w-32 h-64 p-4" mat-raised-button color="primary">
