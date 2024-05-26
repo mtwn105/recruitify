@@ -33,7 +33,7 @@ export class JobsComponent {
   loggedInUser: any;
   searchJobTerm = '';
 
-  constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService, private loadingService: LoadingInterceptorService) {
+  constructor(public authenticator: AuthenticatorService, private router: Router, public authService: AuthService, private loadingService: LoadingInterceptorService) {
 
   }
 

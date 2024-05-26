@@ -87,11 +87,12 @@ const schema = a.schema({
     .authorization(allow => [allow.publicApiKey()])
     // specify the "generateHaiku" function we just created
     .handler(a.handler.function(newJob))
-});
+}).authorization((allow) => [allow.resource(newJob)]);;
 
 export type Schema = ClientSchema<typeof schema>;
 
 export const data = defineData({
+  name: 'recruitify-data',
   schema,
   authorizationModes: {
     defaultAuthorizationMode: 'apiKey',

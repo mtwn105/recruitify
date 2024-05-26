@@ -57,11 +57,11 @@ export class AuthComponent {
 
             if (user.data[0] && user.data[0].id) {
               client.models.JobNotifications.observeQuery({
-                filter: {
-                  userId: {
-                    eq: user?.data[0]?.id
-                  }
-                }
+                // filter: {
+                //   userId: {
+                //     eq: user?.data[0]?.id
+                //   }
+                // }
               }).subscribe((notification) => {
                 console.log("Notifications ", notification)
               })
@@ -72,11 +72,11 @@ export class AuthComponent {
         })
       } else if (data.authStatus === 'authenticated' && this.authService.isLoggedIn) {
         client.models.JobNotifications.observeQuery({
-          filter: {
-            userId: {
-              eq: this.authService.userProfile.id
-            }
-          }
+          // filter: {
+          //   userId: {
+          //     eq: this.authService.userProfile.id
+          //   }
+          // }
         }).subscribe((notification) => {
           console.log("Notifications ", notification)
           this.notifications = notification.items;
