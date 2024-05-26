@@ -142,4 +142,8 @@ export class JobDetailsComponent {
     this.router.navigate(['/job-applications', this.job.id]);
   }
 
+  launchWebsite(website: any) {
+    window.open(website, "_blank")
+  }
+
 }

@@ -79,13 +79,9 @@ const schema = a.schema({
     })
     .authorization((allow) => [allow.publicApiKey()]),
   sendJobNotification: a.mutation()
-    // specify a "roomId" argument
     .arguments({ jobId: a.string(), companyId: a.string() })
-    // we'll return the Haiku as a string
     .returns(a.string())
-    // authorize using an API key
     .authorization(allow => [allow.publicApiKey()])
-    // specify the "generateHaiku" function we just created
     .handler(a.handler.function(newJob))
 }).authorization((allow) => [allow.resource(newJob)]);;
 
