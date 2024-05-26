@@ -1,4 +1,5 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+import { newJob } from '../functions/new-job/resource';
 
 const schema = a.schema({
   User: a
@@ -67,6 +68,25 @@ const schema = a.schema({
       status: a.string(),
     })
     .authorization((allow) => [allow.publicApiKey()]),
+  JobNotifications: a
+    .model({
+      id: a.id(),
+      jobId: a.string(),
+      jobTitle: a.string(),
+      companyId: a.string(),
+      userId: a.string(),
+      status: a.string(),
+    })
+    .authorization((allow) => [allow.publicApiKey()]),
+  sendJobNotification: a.mutation()
+    // specify a "roomId" argument
+    .arguments({ jobId: a.string(), companyId: a.string() })
+    // we'll return the Haiku as a string
+    .returns(a.string())
+    // authorize using an API key
+    .authorization(allow => [allow.publicApiKey()])
+    // specify the "generateHaiku" function we just created
+    .handler(a.handler.function(newJob))
 });
 
 export type Schema = ClientSchema<typeof schema>;

@@ -80,6 +80,14 @@ export class CreateJobComponent {
       description: this.createJobForm.value.description,
     }).then(job => {
       console.log(job);
+
+      client.mutations.sendJobNotification({
+        jobId: job.data?.id,
+        companyId: job.data?.companyId
+      }).then((job) => {
+        console.log(job)
+      })
+
       this.router.navigate(['/jobs']);
     }).finally(() => {
       this.loadingService.hide();

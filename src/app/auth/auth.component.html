@@ -36,6 +36,21 @@
         My Jobs
       </button>
       <span class="spacer"></span>
+      <button *ngIf="!authService.isRecruiter" mat-button [matMenuTriggerFor]="notifyMenu">
+
+        <mat-icon [matBadge]="notifications?.length" matBadgeColor="warn"
+          class="align-middle ">notifications</mat-icon></button>
+
+      <mat-menu #notifyMenu="matMenu" xPosition="after">
+        <button *ngFor="let notification of notifications" (click)="openJob(notification)" mat-menu-item>New Job For You
+          <span class="font-bold">{{notification?.jobTitle}}</span></button>
+        <ng-container *ngIf="!notifications || notifications.length ==0">
+          <p class="m-2">
+            No New Notifications
+          </p>
+        </ng-container>
+
+      </mat-menu>
       <button mat-button [matMenuTriggerFor]="menu"> <span
           class="text-sm mx-2">{{authService.user?.signInDetails?.loginId}}</span><mat-icon
           class="align-middle ">account_circle</mat-icon></button>
