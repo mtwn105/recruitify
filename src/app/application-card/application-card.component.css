@@ -52,3 +52,12 @@
   background-color: rgb(255, 54, 54) !important;
   color: white !important;
 }
+
+.github-button {
+  background-color: #333 !important ;
+  color: #fff !important; /* Text color */
+}
+.linkedin-button {
+  background-color: #0077b5 !important ;
+  color: #fff !important; /* Text color */
+}

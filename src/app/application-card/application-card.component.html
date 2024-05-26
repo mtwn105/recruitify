@@ -29,10 +29,30 @@
       <span *ngFor="let skill of application?.userProfile?.skills"
         class="badge-category bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-semibold mr-2 mb-2">{{skill}}</span>
     </div>
-    <button *ngIf="this.application?.userProfile?.resume" (click)="downloadResume()" class="h-64" mat-raised-button
-      color="primary">
-      Download Resume
-    </button>
+    <div class="flex">
+
+      <button *ngIf="this.application?.userProfile?.website" (click)="launchWebsite()" class="h-64 mr-2"
+        mat-raised-button>
+        <mat-icon>public</mat-icon>
+        Website
+      </button>
+
+      <button *ngIf="this.application?.userProfile?.linkedin" (click)="launchLinkedin()"
+        class="h-64 mr-2 linkedin-button" mat-raised-button>
+        <mat-icon>group</mat-icon>
+        LinkedIn
+      </button>
+
+      <button *ngIf="this.application?.userProfile?.github" (click)="launchGithub()" class="h-64 mr-2 github-button"
+        mat-raised-button>
+        <mat-icon>code</mat-icon>
+        GitHub
+      </button>
+      <button *ngIf="this.application?.userProfile?.resume" (click)="downloadResume()" class="h-64" mat-raised-button
+        color="primary">
+        Download Resume
+      </button>
+    </div>
     <!--
     <div>
       <p class="text-sm text-gray-400">{{job.createdAt | timeAgo}}

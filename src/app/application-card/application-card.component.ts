@@ -104,5 +104,15 @@ export class ApplicationCardComponent {
     });;
   }
 
+  launchWebsite() {
+    window.open(this.application?.userProfile?.website, '_blank');
+  }
+  launchGithub() {
+    window.open(this.application?.userProfile?.github, '_blank');
+  }
+  launchLinkedin() {
+    window.open(this.application?.userProfile?.linkedin, '_blank');
+  }
+
 
 }
