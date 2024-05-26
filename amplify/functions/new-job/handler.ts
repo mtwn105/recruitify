@@ -2,11 +2,30 @@ import { generateClient } from 'aws-amplify/data';
 import { type Schema } from "../../data/resource"
 import { env } from "$amplify/env/new-job";
 import { Amplify } from "aws-amplify";
-import config from '../../../amplify_outputs.json'
 
 type Handler = Schema["sendJobNotification"]["functionHandler"]
 
-Amplify.configure(config);
+Amplify.configure(
+  {
+
+  },
+  {
+    Auth: {
+      credentialsProvider: {
+        getCredentialsAndIdentityId: async () => ({
+          credentials: {
+            accessKeyId: env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+            sessionToken: env.AWS_SESSION_TOKEN,
+          },
+        }),
+        clearCredentialsAndIdentityId: () => {
+          /* noop */
+        },
+      },
+    },
+  }
+);
 
 const client = generateClient<Schema>();
 
