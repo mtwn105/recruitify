@@ -14,6 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import type { Schema } from '../../../amplify/data/resource';
 import { generateClient } from 'aws-amplify/api';
 import { downloadData } from 'aws-amplify/storage';
+import { LoadingInterceptorService } from '../loading-interceptor.service';
 
 const client = generateClient<Schema>();
 
@@ -31,11 +32,12 @@ export class JobDetailsComponent {
   loggedInUser: any;
   jobApplication: any;
 
-  constructor(private activatedRoute: ActivatedRoute, public authService: AuthService, private router: Router) {
+  constructor(private activatedRoute: ActivatedRoute, public authService: AuthService, private router: Router, private loadingService: LoadingInterceptorService) {
 
   }
 
   ngOnInit() {
+    this.loadingService.show();
     this.activatedRoute.paramMap.subscribe(params => {
       this.jobId = params.get('id');
       this.fetchJobDetails();
@@ -86,6 +88,8 @@ export class JobDetailsComponent {
         });
       }
 
+    }).finally(() => {
+      this.loadingService.hide();
     });
   }
 

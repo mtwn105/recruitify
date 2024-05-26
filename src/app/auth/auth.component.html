@@ -50,6 +50,7 @@
         Sign out
       </button> -->
     </mat-toolbar>
+    <app-loading-spinner [isLoading]="isLoading | async"></app-loading-spinner>
     <router-outlet></router-outlet>
 
   </ng-template>

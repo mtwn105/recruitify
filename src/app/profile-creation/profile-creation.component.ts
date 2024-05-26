@@ -15,6 +15,7 @@ import { uploadData } from "aws-amplify/storage";
 import type { Schema } from '../../../amplify/data/resource';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../services/auth.service';
+import { LoadingInterceptorService } from '../loading-interceptor.service';
 const client = generateClient<Schema>();
 
 
@@ -46,7 +47,7 @@ export class ProfileCreationComponent {
   recruiterProfileForm: FormGroup;
   jobSeekerProfileForm: FormGroup;
 
-  constructor(public authenticator: AuthenticatorService, private router: Router, private formBuilder: FormBuilder, private authService: AuthService) {
+  constructor(public authenticator: AuthenticatorService, private router: Router, private formBuilder: FormBuilder, private authService: AuthService, private loadingService: LoadingInterceptorService) {
     this.recruiterProfileForm = this.formBuilder.group({
       image: this.formBuilder.control(''),
       name: this.formBuilder.control('', [Validators.required]),
@@ -79,7 +80,7 @@ export class ProfileCreationComponent {
 
 
   getUser() {
-
+    this.loadingService.show();
     client.models.User.list({
       filter: {
         username: {
@@ -139,6 +140,8 @@ export class ProfileCreationComponent {
       }
       // this.userProfile = user.profile;
       // console.log(this.userProfile);
+    }).finally(() => {
+      this.loadingService.hide();
     });
 
 
@@ -152,6 +155,8 @@ export class ProfileCreationComponent {
       console.log('form invalid');
       return;
     }
+
+    this.loadingService.show();
 
     client.models.User.create({
       name: this.recruiterProfileForm.value.name,
@@ -188,7 +193,9 @@ export class ProfileCreationComponent {
         this.router.navigate(['/jobs']);
       });
 
-    })
+    }).finally(() => {
+      this.loadingService.hide();
+    });
 
   }
 
@@ -219,6 +226,8 @@ export class ProfileCreationComponent {
       console.log('form invalid');
       return;
     }
+
+    this.loadingService.show();
 
     client.models.User.create({
       name: this.jobSeekerProfileForm.value.name,
@@ -263,7 +272,9 @@ export class ProfileCreationComponent {
         this.router.navigate(['/jobs']);
       });
 
-    })
+    }).finally(() => {
+      this.loadingService.hide();
+    });
 
   }
 

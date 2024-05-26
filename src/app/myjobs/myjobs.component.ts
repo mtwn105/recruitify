@@ -14,6 +14,7 @@ import { generateClient } from 'aws-amplify/api';
 import { AuthService } from '../services/auth.service';
 import { downloadData } from 'aws-amplify/storage';
 import { Router } from '@angular/router';
+import { LoadingInterceptorService } from '../loading-interceptor.service';
 
 const client = generateClient<Schema>();
 @Component({
@@ -27,10 +28,11 @@ export class MyjobsComponent {
   // myJobs: any[] = [];
   loggedInUser: any;
 
-  constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService) { }
+  constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService, private loadingService: LoadingInterceptorService) { }
 
   ngOnInit() {
 
+    this.loadingService.show();
     this.getUser();
     this.fetchJobs();
 
@@ -71,7 +73,7 @@ export class MyjobsComponent {
           }
         },
       }).then(applications => {
-
+        this.loadingService.hide();
         console.log("My Jobs>", applications);
         let applicationsData = applications.data;
 
@@ -142,6 +144,7 @@ export class MyjobsComponent {
           }
         }
       }).then(jobs => {
+        this.loadingService.hide();
         console.log("My Jobs>", jobs);
         this.jobs = jobs.data;
 

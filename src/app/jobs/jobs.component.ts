@@ -14,6 +14,8 @@ import { generateClient } from 'aws-amplify/api';
 import { AuthService } from '../services/auth.service';
 import { downloadData } from 'aws-amplify/storage';
 import { JobCardComponentComponent } from '../job-card-component/job-card-component.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LoadingInterceptorService } from '../loading-interceptor.service';
 
 const client = generateClient<Schema>();
 @Component({
@@ -21,17 +23,19 @@ const client = generateClient<Schema>();
   standalone: true,
   imports: [AmplifyAuthenticatorModule, CommonModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatCardModule, MatSliderModule, MatChipsModule, MatIconModule, JobCardComponentComponent],
   templateUrl: './jobs.component.html',
-  styleUrl: './jobs.component.css'
+  styleUrl: './jobs.component.css',
 })
 export class JobsComponent {
   jobs: any[] = [];
   // myJobs: any[] = [];
   loggedInUser: any;
 
-  constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService) { }
+  constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService, private loadingService: LoadingInterceptorService) {
+
+  }
 
   ngOnInit() {
-
+    this.loadingService.show();
     this.getUser();
     this.fetchJobs();
 
@@ -117,6 +121,8 @@ export class JobsComponent {
           });
         }
       }
+    }).finally(() => {
+      this.loadingService.hide();
     });
 
     // client.models.Job.list({

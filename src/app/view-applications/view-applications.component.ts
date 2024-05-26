@@ -16,6 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { TimeAgoPipe } from '../time-ago.pipe';
 import { ApplicationCardComponent } from '../application-card/application-card.component';
+import { LoadingInterceptorService } from '../loading-interceptor.service';
 
 const client = generateClient<Schema>();
 
@@ -32,11 +33,12 @@ export class ViewApplicationsComponent {
   loggedInUser: any;
   jobApplications: any;
 
-  constructor(private activatedRoute: ActivatedRoute, public authService: AuthService, private router: Router) {
+  constructor(private activatedRoute: ActivatedRoute, public authService: AuthService, private router: Router, private loadingService: LoadingInterceptorService) {
 
   }
 
   ngOnInit() {
+    this.loadingService.show();
     this.activatedRoute.paramMap.subscribe(params => {
       this.jobId = params.get('id');
       this.fetchJobDetails();
@@ -84,6 +86,8 @@ export class ViewApplicationsComponent {
         });
       }
 
+    }).finally(() => {
+      this.loadingService.hide();
     });
   }
 
@@ -128,6 +132,7 @@ export class ViewApplicationsComponent {
 
   applyJob() {
     console.log("Applying for job: ", this.job.id);
+    this.loadingService.show();
     client.models.JobApplications.create({
       jobId: this.job.id,
       userId: this.loggedInUser.id,
@@ -136,6 +141,8 @@ export class ViewApplicationsComponent {
     }).then(application => {
       console.log(application);
       this.router.navigate(['/myjobs']);
+    }).finally(() => {
+      this.loadingService.hide();
     });
   }
 
@@ -145,11 +152,14 @@ export class ViewApplicationsComponent {
 
   deleteJob() {
     console.log("Deleting job: ", this.job.id);
+    this.loadingService.show();
     client.models.Job.delete({
       id: this.job.id
     }).then(job => {
       console.log(job);
       this.router.navigate(['/jobs']);
+    }).finally(() => {
+      this.loadingService.hide();
     });
   }
 

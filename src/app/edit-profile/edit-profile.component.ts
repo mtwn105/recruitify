@@ -14,6 +14,7 @@ import { AuthService } from '../services/auth.service';
 import { generateClient } from 'aws-amplify/api';
 import { Router } from '@angular/router';
 import { downloadData, uploadData } from 'aws-amplify/storage';
+import { LoadingInterceptorService } from '../loading-interceptor.service';
 const client = generateClient<Schema>();
 
 @Component({
@@ -47,7 +48,7 @@ export class EditProfileComponent {
   profileId = '';
   existingFile: boolean = false;
 
-  constructor(public authenticator: AuthenticatorService, private router: Router, private formBuilder: FormBuilder, private authService: AuthService) {
+  constructor(public authenticator: AuthenticatorService, private router: Router, private formBuilder: FormBuilder, private authService: AuthService, private loadingService: LoadingInterceptorService) {
     this.recruiterProfileForm = this.formBuilder.group({
       image: this.formBuilder.control(''),
       name: this.formBuilder.control('', [Validators.required]),
@@ -75,6 +76,7 @@ export class EditProfileComponent {
   }
 
   ngOnInit() {
+    this.loadingService.show();
     this.getUser();
   }
 
@@ -115,6 +117,8 @@ export class EditProfileComponent {
             }
 
           }
+        }).finally(() => {
+          this.loadingService.hide();
         });
       } else {
         client.models.UserProfile.list({
@@ -173,6 +177,8 @@ export class EditProfileComponent {
               })
             }
           }
+        }).finally(() => {
+          this.loadingService.hide();
         });
       }
     }
@@ -186,6 +192,8 @@ export class EditProfileComponent {
       console.log('form invalid');
       return;
     }
+
+    this.loadingService.show();
 
     let logoPath = '';
 
@@ -210,6 +218,8 @@ export class EditProfileComponent {
       console.log(profile);
       this.userProfile = profile;
       this.router.navigate(['/jobs']);
+    }).finally(() => {
+      this.loadingService.hide();
     });
 
   }
@@ -242,6 +252,8 @@ export class EditProfileComponent {
       console.log('form invalid');
       return;
     }
+
+    this.loadingService.show();
 
     let resumePath = null;
 
@@ -276,6 +288,8 @@ export class EditProfileComponent {
       console.log(profile);
       this.userProfile = profile;
       this.router.navigate(['/jobs']);
+    }).finally(() => {
+      this.loadingService.hide();
     });
 
   }

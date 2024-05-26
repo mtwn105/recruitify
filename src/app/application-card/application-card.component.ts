@@ -14,6 +14,7 @@ import { AuthService } from '../services/auth.service';
 import type { Schema } from '../../../amplify/data/resource';
 import { generateClient } from 'aws-amplify/api';
 import { downloadData } from 'aws-amplify/storage';
+import { LoadingInterceptorService } from '../loading-interceptor.service';
 
 const client = generateClient<Schema>();
 @Component({
@@ -29,7 +30,7 @@ export class ApplicationCardComponent {
   loggedInUser: any;
   skills: any;
 
-  constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService) { }
+  constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService, private loadingService: LoadingInterceptorService) { }
 
   ngOnInit() {
     this.loggedInUser = this.authService.userProfile;
@@ -38,28 +39,35 @@ export class ApplicationCardComponent {
 
   accept() {
     // console.log(this.application);
+    this.loadingService.show();
     client.models.JobApplications.update({
       id: this.application.id,
       status: 'ACCEPTED'
     }).then((application) => {
       console.log(application);
       this.application.status = application.data?.status;
-    });
+    }).finally(() => {
+      this.loadingService.hide();
+    });;
     // this.router.navigate(['/view-applications', this.application.jobId]);
   }
 
   reject() {
     // console.log(this.application);
+    this.loadingService.show();
     client.models.JobApplications.update({
       id: this.application.id,
       status: 'REJECTED'
     }).then((application) => {
       console.log(application);
       this.application.status = application.data?.status;
-    });
+    }).finally(() => {
+      this.loadingService.hide();
+    });;
   }
 
   downloadResume() {
+    this.loadingService.show();
     downloadData({
       path: this.application?.userProfile?.resume,
     }).result.then(data => {
@@ -91,7 +99,9 @@ export class ApplicationCardComponent {
         // reader.readAsDataURL(this.selectedFile);
         // this.existingFile = true;
       })
-    })
+    }).finally(() => {
+      this.loadingService.hide();
+    });;
   }
 
 

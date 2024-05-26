@@ -16,6 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { LoadingInterceptorService } from '../loading-interceptor.service';
 
 const client = generateClient<Schema>();
 
@@ -37,7 +38,7 @@ export class EditJobComponent {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   skills: string[] = [];
 
-  constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService, private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute) {
+  constructor(public authenticator: AuthenticatorService, private router: Router, private authService: AuthService, private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private loadingService: LoadingInterceptorService) {
 
     this.updateJobForm = this.formBuilder.group({
       title: this.formBuilder.control('', [Validators.required]),
@@ -54,6 +55,7 @@ export class EditJobComponent {
 
 
   ngOnInit() {
+    this.loadingService.show();
     this.activatedRoute.paramMap.subscribe(params => {
       this.jobId = params.get('id');
       this.fetchJobDetails();
@@ -111,6 +113,8 @@ export class EditJobComponent {
       //   });
       // }
 
+    }).finally(() => {
+      this.loadingService.hide();
     });
   }
 
@@ -152,6 +156,8 @@ export class EditJobComponent {
       return;
     }
 
+    this.loadingService.show();
+
     client.models.Job.update({
       id: this.job.id,
       title: this.updateJobForm.value.title,
@@ -167,6 +173,8 @@ export class EditJobComponent {
     }).then(job => {
       console.log(job);
       this.router.navigate(['/job-details', this.job.id]);
+    }).finally(() => {
+      this.loadingService.hide();
     });
 
   }

@@ -13,19 +13,25 @@ import { Hub } from '@aws-amplify/core';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
 import { AuthService } from '../services/auth.service';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { LoadingInterceptorService } from '../loading-interceptor.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { Observable } from 'rxjs';
 const client = generateClient<Schema>();
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [RouterOutlet, AmplifyAuthenticatorModule, CommonModule, MatToolbarModule, MatIconModule, MatMenuModule],
+  imports: [RouterOutlet, AmplifyAuthenticatorModule, CommonModule, MatToolbarModule, MatIconModule, MatMenuModule, LoadingSpinnerComponent],
   templateUrl: './auth.component.html',
-  styleUrl: './auth.component.css'
+  styleUrl: './auth.component.css',
 })
 export class AuthComponent {
 
+  isLoading: Observable<boolean>;
 
-  constructor(public authenticator: AuthenticatorService, public router: Router, public authService: AuthService, public activatedRoute: ActivatedRoute) {
+  constructor(public authenticator: AuthenticatorService, public router: Router, public authService: AuthService, public activatedRoute: ActivatedRoute, private loadingService: LoadingInterceptorService) {
     Amplify.configure(config);
+    this.isLoading = this.loadingService.loading$;
   }
 
   ngOnInit() {
