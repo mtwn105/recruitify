@@ -48,3 +48,7 @@
   color: white !important;
   vertical-align: middle !important;
 }
+
+.multi_lines_text {
+  white-space: pre-line;
+}
