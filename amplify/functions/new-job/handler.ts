@@ -11,7 +11,7 @@ type Handler = Schema["sendJobNotification"]["functionHandler"]
 
 const logger = new Logger({
   logLevel: "INFO",
-  serviceName: "kinesis-stream-handler",
+  serviceName: "sendJobNotification",
 });
 
 

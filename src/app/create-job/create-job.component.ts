@@ -123,4 +123,23 @@ export class CreateJobComponent {
     }
   }
 
+  generateJobDescription() {
+    this.loadingService.show();
+    client.mutations.generateJobDescription({
+      title: this.createJobForm.value.title,
+      skills: this.skills.join(','),
+      domain: this.createJobForm.value.domain,
+      minExperience: this.createJobForm.value.minExperience,
+    }).then((response) => {
+      console.log(response);
+      if (response?.data) {
+        this.createJobForm.patchValue({
+          description: response.data
+        })
+      }
+    }).finally(() => {
+      this.loadingService.hide();
+    })
+  }
+
 }

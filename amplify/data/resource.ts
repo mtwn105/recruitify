@@ -1,5 +1,6 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 import { newJob } from '../functions/new-job/resource';
+import { generateJobDescription } from '../functions/generate-job-description/resource';
 
 const schema = a.schema({
   User: a
@@ -82,8 +83,13 @@ const schema = a.schema({
     .arguments({ jobId: a.string(), companyId: a.string() })
     .returns(a.string())
     .authorization(allow => [allow.publicApiKey()])
-    .handler(a.handler.function(newJob))
-}).authorization((allow) => [allow.resource(newJob)]);;
+    .handler(a.handler.function(newJob)),
+  generateJobDescription: a.mutation()
+    .arguments({ title: a.string(), minExperience: a.float(), skills: a.string(), domain: a.string() })
+    .returns(a.string())
+    .authorization(allow => [allow.publicApiKey()])
+    .handler(a.handler.function(generateJobDescription))
+}).authorization((allow) => [allow.resource(newJob), allow.resource(generateJobDescription)]);
 
 export type Schema = ClientSchema<typeof schema>;
 
